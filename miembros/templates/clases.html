@@ -1,0 +1,15 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+{% for clas in clases %}
+<h1>Clase: {{clas.clase}}</h1>
+
+<h2>Horario: {{clas.horario}}
+    profesor: {{clas.profesor.nombre}} {{clas.profesor.apellido}}
+    cuota: {{clas.cuota_mensual}}
+</h2>
+<button><a href="{% url 'clase' clas.slug %}">Alumnos</a></button>
+{% endfor %}
+
+{% endblock %}

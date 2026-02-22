@@ -1,0 +1,46 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+<h1>{{clas.clase}}  {{clas.profesor.nombre}} {{clas.profesor.apellido}} </h1>
+
+<h1>{{class.ID}}</h1>
+
+{% if inscripciones_activos %}
+   {% for insc in inscripciones_activos %}
+      <h3>
+         Alumno: {{ insc.alumno.nombre }} {{ insc.alumno.apellido }}
+      </h3>
+
+      <p>
+         DNI: {{ insc.alumno.dni }} <br>
+         Fecha inscripción: {{ insc.fecha_inscripcion }} <br>
+         Cuota: {{ insc.clase.cuota_mensual }}
+      </p>
+
+      <hr>
+    {% endfor %}
+{% else %}
+    <p>No hay alumnos inscriptos en esta clase.</p>
+{% endif %}
+
+{% if inscripciones_inactivos %}
+   {% for insc in inscripciones_inactivos %}
+      <h3>
+         Alumno: {{ insc.alumno.nombre }} {{ insc.alumno.apellido }}
+      </h3>
+
+      <p>
+         DNI: {{ insc.alumno.dni }} <br>
+         Fecha inscripción: {{ insc.fecha_inscripcion }} <br>
+         Cuota: {{ insc.clase.cuota_mensual }}
+      </p>
+
+      <hr>
+    {% endfor %}
+{% else %}
+   <p>No hay alumnos inactivos</p>
+
+{% endif %}
+
+{% endblock %}

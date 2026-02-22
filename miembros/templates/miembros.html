@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+
+{% block content%}
+
+{% for miembro in miembros%}
+<h1>Alumno: {{miembro.nombre}} {{miembro.apellido}}</h1>
+<p>Inscripcion: {{miembro.fecha_alta}}
+   dni: {{miembro.dni}}
+</p>
+{% endfor%}
+
+{% endblock%}
