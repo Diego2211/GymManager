@@ -3,7 +3,23 @@
 {% block content %}
 
 <h1>agregar miembros</h1>
+<div class="mb-3">
+<form method="post" class="mt-4">
+    {% csrf_token %}
+    {% for i in form %}
+        <div class="mb-3">
+            {{ i.label_tag }}
+            {{ i }}
+            {% if i.errors %}
+                <div class="text-danger small">
+                    {{ i.errors }}
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+    <button class="btn btn-primary">Guardar</button>
+</form>
+</div>
 
-{{form}}
 
 {% endblock %}

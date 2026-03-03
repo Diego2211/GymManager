@@ -31,6 +31,9 @@ class Alumnos(models.Model):
 
     fecha_alta = models.DateField(auto_now_add=True)
 
+    def __str__(self):
+        return f"{self.nombre} {self.apellido}"
+
 
 
 class Clases(models.Model):

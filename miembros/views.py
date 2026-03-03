@@ -1,7 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 from .models import Alumnos, Profesores, Pagos, Clases, Inscripciones, Avisos
-from .forms import ingreso_usuario
+from .forms import ingreso_usuario, ingreso_profesor
 
 # Create your views here.
 
@@ -51,6 +51,29 @@ def clase(request, slug):
     })"""
 
 def ingreso_miembro(request):
-    return render(request, "ingreso_miembros.html",{
-        "form":ingreso_usuario
+    if request.method == "POST":
+        form = ingreso_usuario(request.POST)
+
+        if form.is_valid():
+            form.save()  
+            return redirect("/miembros/") 
+
+    else:
+        form = ingreso_usuario()
+
+    return render(request, "ingreso_miembros.html", {
+        "form": form
+    })
+
+def ingreso_prof(request):
+    if request.method == 'POST':
+        form = ingreso_profesor(request.POST)
+
+        if form.isvalid():
+            form.save()
+            return redirect("/miembros/")
+    else:
+        form = ingreso_profesor()
+    return render(request, "ingreso_miembros.html", {
+        "form":form
     })

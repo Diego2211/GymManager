@@ -1,10 +1,27 @@
 from django import forms
+from .models import Alumnos, Profesores
 
-class ingreso_usuario(forms.Form):
-    nombre = forms.CharField(max_length=40, label="Ingrese el nombre o nombres",)
 
-    apellido = forms.CharField(max_length=40, label="ingrese el apellido o apellidos")
+class BaseForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-    dni = forms.CharField(max_length=9, label="ingrese el dni, sin puntos ni comas")
+        for field in self.fields.values():
+            field.widget.attrs.update({
+                'class': 'form-control'
+            })
 
-    celular = forms.CharField(max_length=20, label="ingrese el nro de celular sin guiones ni espacios")
+
+class ingreso_usuario(forms.ModelForm):
+    class Meta:
+        model = Alumnos
+        fields = '__all__'
+
+
+class ingreso_profesor(forms.ModelForm):
+    username = forms.CharField(label="usuario")
+    password = forms.CharField(widget=forms.PasswordInput, label="contraseña")
+    class Meta:
+        model = Profesores
+        fields = '__all__'
+        exclude = ['usuario']

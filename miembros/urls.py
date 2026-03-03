@@ -1,4 +1,4 @@
-from miembros.views import index, miembros, profesores, clases, clase, ingreso_miembro
+from miembros.views import index, miembros, profesores, clases, clase, ingreso_miembro, ingreso_prof
 from django.urls import path
 
 urlpatterns = [
@@ -7,5 +7,6 @@ urlpatterns = [
     path('profesores/', profesores),
     path('clases/', clases),
     path('clases/<slug:slug>/', clase, name="clase"),
-    path('ingreso-miembros', ingreso_miembro,),
+    path('ingreso-alumnos/', ingreso_miembro,),
+    path('ingreso-profesor/', ingreso_prof)
 ]
