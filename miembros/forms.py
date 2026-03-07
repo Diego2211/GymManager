@@ -21,6 +21,7 @@ class ingreso_usuario(forms.ModelForm):
 class ingreso_profesor(forms.ModelForm):
     username = forms.CharField(label="usuario")
     password = forms.CharField(widget=forms.PasswordInput, label="contraseña")
+    email = forms.EmailField(label="Correo")
     class Meta:
         model = Profesores
         fields = '__all__'
