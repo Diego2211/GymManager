@@ -1,5 +1,6 @@
 from django import forms
-from .models import Alumnos, Profesores
+from .models import Alumnos, Profesores, Inscripciones, Clases
+from django.contrib.auth.forms import AuthenticationForm
 
 
 class BaseForm(forms.Form):
@@ -26,3 +27,22 @@ class ingreso_profesor(forms.ModelForm):
         model = Profesores
         fields = '__all__'
         exclude = ['usuario']
+
+
+class login_usuario(AuthenticationForm):
+    username = forms.CharField(label="usuario")
+    password = forms.CharField(label="contraseña", widget=forms.PasswordInput)
+
+
+class inscripcion_form(forms.ModelForm):
+    class Meta:
+        model = Inscripciones
+        fields = ["alumno", "clase"]
+
+
+class crear_clase_form(forms.ModelForm):
+    
+    class Meta:
+        model = Clases
+        fields = '__all__'
+        exclude = ['slug']
