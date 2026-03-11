@@ -17,6 +17,9 @@ class Profesores(models.Model):
 
     fecha_alta = models.DateField(auto_now_add=True)
 
+    def __str__(self):
+        return f"{self.nombre} {self.apellido}"
+
 
 
 class Alumnos(models.Model):
@@ -58,6 +61,9 @@ class Clases(models.Model):
                 contador += 1
             self.slug = slug
         super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return f"{self.clase} - {self.profesor.nombre} {self.profesor.apellido}"
 
 
 class Inscripciones(models.Model):
