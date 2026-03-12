@@ -9,19 +9,19 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def index(request):
-    return render(request, "index.html")
+    return render(request, "miembros/index.html")
 
 
 def miembros(request):
     miembro = Alumnos.objects.all()
-    return render(request, "miembros.html", {
+    return render(request, "miembros/miembros.html", {
         "miembros": miembro
     })
 
 
 def profesores(request):
     profesor = Profesores.objects.all()
-    return render(request, "profesores.html", {
+    return render(request, "miembros/profesores.html", {
         "profesores": profesor
     })
 
@@ -29,7 +29,7 @@ def profesores(request):
 def clases(request):
     clase = Clases.objects.all()
     profesor = Profesores.objects.all()
-    return render(request, "clases.html", {
+    return render(request, "miembros/clases.html", {
         "clases": clase,
         "profesores":profesor
     })
@@ -45,7 +45,7 @@ def clase(request, slug):
         clase=clase,
         activo=False
     )
-    return render(request, "clase.html", {
+    return render(request, "miembros/clase.html", {
         "clas":clase,
         "inscripciones_activos":inscripciones_activos,
         "inscripciones_inactivos":inscripciones_inactivos
@@ -70,12 +70,13 @@ def ingreso_miembro(request):
     else:
         form = ingreso_usuario()
 
-    return render(request, "ingreso_miembros.html", {
+    return render(request, "miembros/ingreso_miembros.html", {
         "form": form
     })
 
 
 def ingreso_prof(request):
+    msg = "Crear profesor"
     if request.method == "POST":
         form = ingreso_profesor(request.POST)
 
@@ -103,8 +104,10 @@ def ingreso_prof(request):
     else:
         form = ingreso_profesor()
 
-    return render(request, "ingreso_miembros.html", {
-        "form": form})
+    return render(request, "miembros/ingreso_miembros.html", {
+        "form": form,
+        "msg":msg
+        })
 
 
 def iniciar_sesion(request):
@@ -126,12 +129,14 @@ def iniciar_sesion(request):
     else:
         form = login_usuario()
         
-        return render(request, "inicio_sesion.html", {
-            "form":form})
+        return render(request, "miembros/inicio_sesion.html", {
+            "form":form
+            })
 
 
 @login_required
 def inscribir_alumno(request):
+    msg = "Inscribir alumno"
 
     query = request.GET.get("q")
 
@@ -151,14 +156,15 @@ def inscribir_alumno(request):
             form.save()  
             return redirect("/clases/") 
 
-    return render(request,"inscribir_alumno.html",{
+    return render(request,"miembros/inscribir_alumno.html",{
         "form":form,
-        "query":query
+        "query":query,
+        "msg":msg
     })
 
 
 def crear_clase(request):
-
+    msg = "Crear clase"
     if request.method == "POST":
         form = crear_clase_form(request.POST)
 
@@ -169,6 +175,7 @@ def crear_clase(request):
     else:
         form = crear_clase_form()
 
-    return render(request, "ingreso_miembros.html", {
-        "form": form
+    return render(request, "miembros/ingreso_miembros.html", {
+        "form": form,
+        "msg":msg
     })

@@ -7,9 +7,9 @@ def admin_required(view_decorator):
 
     return decorated_view
 
-def admin_required(view_decorator):
+def profesor_required(view_decorator):
     decorated_view = user_passes_test(
-        lambda u: u.is_authenticated and u.groups.filter(name='admin_gym').exists()
+        lambda u: u.is_authenticated and u.groups.filter(name='profesor').exists()
     )(view_decorator)
 
     return decorated_view
