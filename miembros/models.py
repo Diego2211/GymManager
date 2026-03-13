@@ -1,17 +1,27 @@
 from django.db import models
-from django.contrib.auth.models import User
+from accounts.models import Gym, Membership
 from django.utils.text import slugify
+from django.conf import settings
 
 # Create your models here.
-class Profesores(models.Model):
+class BaseModel(models.Model):
 
-    usuario = models.OneToOneField(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+class Alumnos(BaseModel):
+    
+    gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
 
     nombre = models.CharField(max_length=40)
 
     apellido = models.CharField(max_length=40)
 
-    dni = models.CharField(max_length=9)
+    dni = models.CharField(max_length=9, unique=True)
 
     celular = models.CharField(max_length=20)
 
@@ -22,32 +32,25 @@ class Profesores(models.Model):
 
 
 
-class Alumnos(models.Model):
+class Clases(BaseModel):
 
-    nombre = models.CharField(max_length=40)
+    DIA_SEMANA = [("lunes", "Lunes"),
+                  ("martes", "Martes"),
+                  ("miercoles", "Miércoles"),
+                  ("jueves", "Jueves"),
+                  ("viernes", "Viernes"),
+                  ("sabado", "Sábado"),
+                  ("domingo", "Domingo")]
 
-    apellido = models.CharField(max_length=40)
+    gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
 
-    dni = models.CharField(max_length=9)
-
-    celular = models.CharField(max_length=20)
-
-    fecha_alta = models.DateField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.nombre} {self.apellido}"
-
-
-
-class Clases(models.Model):
+    dia = models.CharField(max_length=20, choices=DIA_SEMANA)
 
     clase = models.CharField(max_length=30)
 
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField()
 
-    horario = models.CharField(max_length=50)
-
-    profesor = models.ForeignKey(Profesores, on_delete=models.CASCADE)
+    profesor = models.ForeignKey(Membership, on_delete=models.CASCADE)
 
     cuota_mensual = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
@@ -56,29 +59,45 @@ class Clases(models.Model):
             base_slug = slugify(self.clase)
             slug = base_slug
             contador = 1
-            while Clases.objects.filter(slug=slug).exists():
+            while Clases.objects.filter(slug=slug, gym=self.gym).exists():
                 slug = f"{base_slug}-{contador}"
                 contador += 1
             self.slug = slug
         super().save(*args, **kwargs)
+
+    
     
     def __str__(self):
-        return f"{self.clase} - {self.profesor.nombre} {self.profesor.apellido}"
+        return f"{self.clase}"
+    
+    class Meta:
+        unique_together = ["gym", "slug"]
 
 
-class Inscripciones(models.Model):
+class Inscripciones(BaseModel):
+
+    gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
 
     clase = models.ForeignKey(Clases, on_delete=models.CASCADE)
 
     alumno = models.ForeignKey(Alumnos, on_delete=models.CASCADE)
 
     fecha_inscripcion = models.DateField(auto_now_add=True)
+
+    creado_por = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                   on_delete=models.SET_NULL,
+                                   null=True)
     
     activo = models.BooleanField(default=True)
 
+    class Meta:
+        unique_together = ["clase", "alumno"]
 
 
-class Pagos(models.Model):
+
+class Pagos(BaseModel):
+
+    gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
 
     Inscripcion = models.ForeignKey(Inscripciones, on_delete=models.CASCADE)
 
@@ -86,10 +105,18 @@ class Pagos(models.Model):
 
     monto = models.DecimalField(max_digits=10, decimal_places=2)
 
-    mes_correspondiente = models.CharField(max_length=20)
+    mes = models.IntegerField()
+
+    anio = models.IntegerField()
+
+    class Meta:
+        unique_together = ["Inscripcion", "mes", "anio"]
 
 
-class Avisos(models.Model):
+class Avisos(BaseModel):
+
+    gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
+
     inscripcion = models.ForeignKey(Inscripciones, on_delete=models.CASCADE)
 
     tipo = models.CharField(

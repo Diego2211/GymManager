@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
+from django.conf import settings
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate, login
 from .models import Alumnos, Profesores, Pagos, Clases, Inscripciones, Avisos
@@ -18,7 +19,7 @@ def miembros(request):
         "miembros": miembro
     })
 
-
+""""""
 def profesores(request):
     profesor = Profesores.objects.all()
     return render(request, "miembros/profesores.html", {
@@ -52,12 +53,6 @@ def clase(request, slug):
     })
 
 
-"""def clase(request, slug):
-    clase = get_object_or_404(Clases, slug=slug)
-    return render(request, "clase.html", {
-        "clase": clase
-    })"""
-
 
 def ingreso_miembro(request):
     if request.method == "POST":
@@ -83,7 +78,7 @@ def ingreso_prof(request):
         if form.is_valid():
 
             #crear usuario
-            user = User.objects.create_user(
+            user = settings.AUTH_USER_MODEL.objects.create_user(
                 username=form.cleaned_data["username"],
                 password=form.cleaned_data["password"],
                 email=form.cleaned_data["email"]
