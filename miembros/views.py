@@ -1,16 +1,16 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
-from django.contrib.auth.models import User, Group
-from django.contrib.auth import authenticate, login
-from .models import Alumnos, Profesores, Pagos, Clases, Inscripciones, Avisos
-from .forms import ingreso_usuario, ingreso_profesor, login_usuario, inscripcion_form, crear_clase_form
+from django.contrib.auth.models import Group
+from accounts.models import Gym, Perfil_usuario, Membership
+from .models import Alumnos, Pagos, Clases, Inscripciones, Avisos
+from .forms import ingreso_usuario, inscripcion_form, crear_clase_form
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
 def index(request):
-    return render(request, "miembros/index.html")
+    return render(request, "miembros/base.html")
 
 
 def miembros(request):
@@ -19,9 +19,9 @@ def miembros(request):
         "miembros": miembro
     })
 
-""""""
+
 def profesores(request):
-    profesor = Profesores.objects.all()
+    profesor = Perfil_usuario.objects.all()
     return render(request, "miembros/profesores.html", {
         "profesores": profesor
     })
@@ -29,7 +29,7 @@ def profesores(request):
 
 def clases(request):
     clase = Clases.objects.all()
-    profesor = Profesores.objects.all()
+    profesor = Membership.objects.all()
     return render(request, "miembros/clases.html", {
         "clases": clase,
         "profesores":profesor
@@ -70,63 +70,10 @@ def ingreso_miembro(request):
     })
 
 
-def ingreso_prof(request):
-    msg = "Crear profesor"
-    if request.method == "POST":
-        form = ingreso_profesor(request.POST)
-
-        if form.is_valid():
-
-            #crear usuario
-            user = settings.AUTH_USER_MODEL.objects.create_user(
-                username=form.cleaned_data["username"],
-                password=form.cleaned_data["password"],
-                email=form.cleaned_data["email"]
-            )
-
-            #añadir usuario al grupo
-            grupo = Group.objects.get(name="profesor")
-            user.groups.add(grupo)
-
-            #vincular usuario con profesor
-            profesor = form.save(commit=False)
-            profesor.usuario = user
-            profesor.save()
-            print("Usuario creado:", user.username)
-
-            return redirect("/profesores/")
-        
-    else:
-        form = ingreso_profesor()
-
-    return render(request, "miembros/ingreso_miembros.html", {
-        "form": form,
-        "msg":msg
-        })
 
 
-def iniciar_sesion(request):
-    if request.method == 'POST':
-        form = login_usuario(request, data=request.POST)
 
-        if form.is_valid():
 
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-
-            user = authenticate(username=username, password=password)
-
-            if user is not None:
-                
-                login(request, user)
-
-                return redirect("/clases/")
-    else:
-        form = login_usuario()
-        
-        return render(request, "miembros/inicio_sesion.html", {
-            "form":form
-            })
 
 
 @login_required
@@ -135,7 +82,7 @@ def inscribir_alumno(request):
 
     query = request.GET.get("q")
 
-    alumnos = Alumnos.objects.all()
+    alumnos = Alumnos.objects.filter(Gym)
 
     if query:
         alumnos = alumnos.filter(nombre__icontains=query)
