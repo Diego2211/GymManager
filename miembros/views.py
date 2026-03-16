@@ -111,7 +111,9 @@ def crear_clase(request):
         form = crear_clase_form(request.POST)
 
         if form.is_valid():
+
             form.save()  
+            
             return redirect("/clases/") 
 
     else:

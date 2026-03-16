@@ -2,7 +2,7 @@ from django import forms
 from .models import Gym, Perfil_usuario, User
 from django.contrib.auth.forms import AuthenticationForm
 
-class BaseForm(forms.Form):
+class BaseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -19,9 +19,11 @@ class inicio_sesion_form(AuthenticationForm):
 class perfil_form(BaseForm):
     class Meta():
         model = Perfil_usuario
+        fields = "__all__"
+        exclude = ["usuario"]
 
 
-class registro_form(forms.ModelForm):
+class registro_form(BaseForm):
 
     password = forms.CharField(widget=forms.PasswordInput)
     password_confirm = forms.CharField(widget=forms.PasswordInput)
@@ -49,3 +51,9 @@ class registro_form(forms.ModelForm):
             user.save()
 
         return user
+    
+class gym_form(BaseForm):
+
+    class Meta:
+        model = Gym
+        exclude = ['slug']

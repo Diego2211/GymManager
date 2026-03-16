@@ -1,0 +1,21 @@
+{% extends "accounts/base.html" %}
+
+{% block content %}
+
+
+<h2>Mi perfil</h2>
+
+<p><strong>Email:</strong> {{ request.user.email }}</p>
+
+<p><strong>Nombre:</strong> {{ perfil.nombre }}</p>
+
+<p><strong>Apellido:</strong> {{ perfil.apellido }}</p>
+
+<p><strong>Teléfono:</strong> {{ perfil.celular }}</p>
+
+<p><strong>Dni:</strong> {{ perfil.dni }}</p>
+<p><strong>Usuario desde:</strong> {{ perfil.fecha_registro }}</p>
+
+<a href="{% url 'editar perfil' %}">Editar perfil</a>
+
+{% endblock %}

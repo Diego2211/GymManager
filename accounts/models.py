@@ -45,13 +45,13 @@ class BaseModel(models.Model):
 
 class Gym(BaseModel):
 
-    nombre = models.CharField(max_length=50)
+    nombre = models.CharField(max_length=50, blank=True)
 
     slug = models.SlugField(unique=True, blank=True)
 
-    direccion = models.CharField(max_length=50)
+    direccion = models.CharField(max_length=50, blank=True)
 
-    telefono = models.CharField(max_length=20)
+    telefono = models.CharField(max_length=20, blank= True)
 
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
