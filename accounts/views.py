@@ -91,3 +91,8 @@ def ver_perfil(request):
     return render(request, "accounts/ver_perfil.html",{
         "perfil":perfil
     })
+
+
+def cerrar_sesion(request):
+    logout(request)
+    return redirect("login")

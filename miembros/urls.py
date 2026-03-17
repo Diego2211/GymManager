@@ -9,5 +9,5 @@ urlpatterns = [
     path('clases/<slug:slug>/', clase, name="clase"),
     path('ingreso-alumnos/', ingreso_miembro,),
     path('inscribir-alumno/', inscribir_alumno),
-    path('crear-clase/', crear_clase)
+    path('crear-clase/', crear_clase),
 ]

@@ -121,6 +121,9 @@ class Membership(BaseModel):
 
     fecha_union = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"{self.usuario.perfil_usuario.nombre} {self.usuario.perfil_usuario.apellido} - {self.rol}"
+
     class Meta:
         unique_together = ["usuario", "gym"]
 
