@@ -2,7 +2,7 @@ from miembros.views import index, miembros, profesores, clases, clase, ingreso_m
 from django.urls import path
 
 urlpatterns = [
-    path('', index),
+    path('', index, name="index"),
     path('miembros/', miembros),
     path('profesores/', profesores),
     path('clases/', clases),

@@ -13,6 +13,7 @@ def index(request):
     return render(request, "miembros/base.html")
 
 
+@login_required
 def miembros(request):
     miembro = Alumnos.objects.all()
     return render(request, "miembros/miembros.html", {
@@ -20,6 +21,7 @@ def miembros(request):
     })
 
 
+@login_required
 def profesores(request):
     profesor = Perfil_usuario.objects.all()
     return render(request, "miembros/profesores.html", {
@@ -27,6 +29,7 @@ def profesores(request):
     })
 
 
+@login_required
 def clases(request):
     clase = Clases.objects.all()
     profesor = Membership.objects.all()
@@ -36,6 +39,7 @@ def clases(request):
     })
 
 
+@login_required
 def clase(request, slug):
     clase = get_object_or_404(Clases, slug=slug)
     inscripciones_activos = Inscripciones.objects.filter(
@@ -53,7 +57,7 @@ def clase(request, slug):
     })
 
 
-
+@login_required
 def ingreso_miembro(request):
     if request.method == "POST":
         form = ingreso_usuario(request.POST)
@@ -105,6 +109,8 @@ def inscribir_alumno(request):
     })
 
 
+
+@login_required
 def crear_clase(request):
     msg = "Crear clase"
     if request.method == "POST":
@@ -112,9 +118,9 @@ def crear_clase(request):
 
         if form.is_valid():
 
-            form.save()  
+            form.save()
             
-            return redirect("/clases/") 
+            return redirect("/clases/")
 
     else:
         form = crear_clase_form()

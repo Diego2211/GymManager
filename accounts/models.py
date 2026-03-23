@@ -1,9 +1,11 @@
-from django.db import models
+from django.db import models, IntegrityError
 from django.contrib.auth.models import AbstractUser
 from django.utils.text import slugify
 from django.conf import settings
 from django.contrib.auth.base_user import BaseUserManager
-
+from django.utils import timezone
+from django.core.exceptions import ValidationError
+import random, string
 
 
 class UserManager(BaseUserManager):
@@ -79,6 +81,8 @@ class Perfil_usuario(BaseModel):
 
     apellido = models.CharField(max_length=40, blank=True)
 
+    gym_activo = models.ForeignKey(Gym, null=True, on_delete=models.SET_NULL)
+
     dni = models.CharField(max_length=9, blank=True)
 
     celular = models.CharField(max_length=20, blank=True)
@@ -103,6 +107,66 @@ class User(AbstractUser):
     objects = UserManager()
 
 
+
+
+
+
+class Invitacion(BaseModel):
+    ROLES = [
+            ("Admin_Gym", "Administrador"),
+            ("profesor", "Profesor"),
+    ]
+
+    gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
+
+    creado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+
+    codigo = models.CharField(max_length=20, unique=True)
+
+    rol = models.CharField(max_length=20, choices=ROLES)
+
+    activa = models.BooleanField(default=True)
+
+    usos_maximos = models.IntegerField(default=1)
+
+    usos_actuales = models.IntegerField(default=0)
+
+    expira_en = models.DateTimeField(null=True, blank=True)
+
+    def esta_expirada(self):
+        return self.expira_en and timezone.now() > self.expira_en
+
+    def puede_usarse(self):
+        return self.activa and self.usos_actuales < self.usos_maximos and not self.esta_expirada()
+    
+    def registrar_uso(self):
+
+        if not self.puede_usarse():
+            raise ValueError("Invitacion no valida")
+        
+        self.usos_actuales += 1
+
+        if self.usos_maximos >= self.usos_actuales:
+            self.activa = False
+
+        self.save()
+
+    def generar_codigo_legible(self):
+        return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+
+    def save(self, *args, **kwargs):
+        if not self.codigo:
+            while True:
+                try:
+                    self.codigo = self.generar_codigo_legible()
+                    super().save(*args, **kwargs)
+                    break
+                except IntegrityError:
+                    continue
+        else:
+            super().save(*args, **kwargs)
+
+
 class Membership(BaseModel):
 
     ROLES = [
@@ -121,9 +185,14 @@ class Membership(BaseModel):
 
     fecha_union = models.DateTimeField(auto_now_add=True)
 
+    invitacion = models.ForeignKey(Invitacion, on_delete=models.SET_NULL, null=True, blank=True)
+
     def __str__(self):
         return f"{self.usuario.perfil_usuario.nombre} {self.usuario.perfil_usuario.apellido} - {self.rol}"
 
     class Meta:
         unique_together = ["usuario", "gym"]
 
+    def clean(self):
+        if self.Invitacion and self.invitacion.gym != self.gym:
+            raise ValidationError("Esta invitacion no pertenece a este gym")

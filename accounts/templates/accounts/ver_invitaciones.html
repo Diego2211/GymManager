@@ -1,0 +1,17 @@
+{% extends "miembros/base.html" %}
+
+{% block content %}
+
+<h1>Invitaciones</h1>
+
+<div> 
+    {% for i in invitaciones %}
+    <p><strong>Codigo:</strong> {{ i.codigo }}</p>
+    <p><strong>Rol:</strong> {{ i.rol }}</p>
+    <p><strong>Creado el:</strong> {{ i.created_at|date:"d \\d\\e F \\d\\e Y" }} </p>
+    <p><strong>creado por:</strong> {{ i.creado_por.perfil_usuario.nombre }} {{ i.creado_por.perfil_usuario.apellido }}</p>
+    <p><strong>fecha de expiracion:</strong> {{i.expira_en}}</p>
+    <p><strong>Usado por:</strong> {% for m in membership %} {% if i.codigo == membership.invitacion.codigo %} {{ membership.usuario.perfil_usuario.apellido }}, {{ membership.usuario.perfil_usuario.nombre }} {% endif %} {% endfor %} </p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -18,11 +18,11 @@
 
 <div class="card-body">
 
-<form method="post" class="mt-4">
+<form method="POST" class="mt-4">
     {% csrf_token %}
     {{ form.as_p }}
 
-    <button type="button" class="btn btn-primary">Guardar</button>
+    <button type="submit" class="btn btn-primary">Registrarse</button>
 </form>
 </div>
 
@@ -33,6 +33,5 @@
 </div>
 
 </div>
-
 
 {% endblock %}

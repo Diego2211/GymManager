@@ -1,4 +1,4 @@
-{% extends "accounts/base.html" %}
+{% extends "miembros/base.html" %}
 
 {% block content %}
 
@@ -11,7 +11,7 @@
 <div class="card shadow">
 
 <div class="card-header">
-<h4 class="text-center">Iniciar sesion</h4>
+<h4 class="text-center">Crear invitacion</h4>
 </div>
 
 <div class="card-body">
@@ -20,7 +20,7 @@
     {% csrf_token %}
     {{ form.as_p }}
 
-    <button type="submit" class="btn btn-primary">Iniciar Sesion</button>
+    <button type="submit" class="btn btn-primary">Guardar</button>
 </form>
 </div>
 
@@ -31,7 +31,5 @@
 </div>
 
 </div>
-
-
 
 {% endblock %}

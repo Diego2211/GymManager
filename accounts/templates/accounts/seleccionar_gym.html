@@ -1,0 +1,39 @@
+{% extends "accounts/base.html" %}
+
+{% block content %}
+
+<h1 class="text-center">Gyms a los que perteneces</h1>
+
+{% for m in memberships %}
+<div class="container mt-5">
+
+<div class="row justify-content-center">
+
+<div class="col-md-6">
+
+<div class="card shadow">
+
+<div class="card-header">
+<h4 class="text-center">{{m.gym.nombre}}</h4>
+</div>
+
+<div class="card-body text-center">
+<form method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="gym_id" value="{{ m.gym.id }}">
+        
+    <button type="submit" class="btn btn-primary">Elegir</button>
+
+</form>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+{% endblock %}

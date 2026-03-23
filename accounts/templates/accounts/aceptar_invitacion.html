@@ -1,4 +1,4 @@
-{% extends "accounts/base.html" %}
+{% extends 'accounts/base.html' %}
 
 {% block content %}
 
@@ -11,16 +11,17 @@
 <div class="card shadow">
 
 <div class="card-header">
-<h4 class="text-center">Iniciar sesion</h4>
+<h4 class="text-center">Ingresa el codigo de invitacion</h4>
 </div>
 
 <div class="card-body">
 
 <form method="post" class="mt-4">
     {% csrf_token %}
-    {{ form.as_p }}
+    <label for="codigo">Ingrese el codigo:</label>
+    <input type="text" name="codigo" required id="codigo">
 
-    <button type="submit" class="btn btn-primary">Iniciar Sesion</button>
+    <button type="submit" class="btn btn-primary">Guardar</button>
 </form>
 </div>
 
@@ -31,7 +32,5 @@
 </div>
 
 </div>
-
-
 
 {% endblock %}
