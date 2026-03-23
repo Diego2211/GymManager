@@ -1,8 +1,9 @@
 from django import forms
 from .models import Alumnos, Inscripciones, Clases
+from accounts.models import Membership
 
 
-class BaseForm(forms.Form):
+class BaseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -12,21 +13,36 @@ class BaseForm(forms.Form):
             })
 
 
-class ingreso_usuario(forms.ModelForm):
+class ingreso_usuario(BaseForm):
     class Meta:
         model = Alumnos
-        fields = '__all__'
+        fields = ["nombre", "apellido", "dni", "celular"]
 
 
-class inscripcion_form(forms.ModelForm):
+class inscripcion_form(BaseForm):
     class Meta:
         model = Inscripciones
         fields = ["alumno", "clase"]
 
+    def __init__(self, *args, **kwargs):
+        gym = kwargs.pop("gym", None)
+        super().__init__(*args, **kwargs)
 
-class crear_clase_form(forms.ModelForm):
+        if gym:
+            self.fields["alumno"].queryset = Alumnos.objects.filter(gym=gym)
+            self.fields["clase"].queryset = Clases.objects.filter(gym=gym)
+
+
+class crear_clase_form(BaseForm):
     
     class Meta:
         model = Clases
-        fields = '__all__'
+        fields = ["clase", "profesor", "dia", "cuota_mensual"]
         exclude = ['slug']
+
+    def __init__(self, *args, **kwargs):
+        gym = kwargs.pop("gym", None)
+        super().__init__(*args, **kwargs)
+
+        if gym:
+            self.fields["profesor"].queryset = Membership.objects.filter(gym=gym, activo=True)

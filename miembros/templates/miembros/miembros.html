@@ -3,8 +3,8 @@
 {% block content%}
 
 {% for miembro in miembros%}
-<h1>Alumno: {{miembro.nombre}} {{miembro.apellido}}</h1>
-<p>Inscripcion: {{miembro.fecha_alta}}
+<h4>Alumno: {{miembro.nombre}} {{miembro.apellido}}</h4>
+<p>Inscripcion: {{miembro.fecha_alta|date:"d \\d\\e F \\d\\e Y"}}
    dni: {{miembro.dni}}
 </p>
 {% endfor%}
