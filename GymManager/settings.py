@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'GymManager.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    "default": dj_database_url.parse(os.environ.get("postgresql://gymmanager_admin:MIl04oLQhQ5ULnKtaogr1Zhjk7UOvLBS@dpg-d711epngi27c73f40hig-a/gymmanager_db"))
+    "default": dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
 
 
