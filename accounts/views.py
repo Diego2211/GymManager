@@ -78,7 +78,7 @@ def crear_gimnasio(request):
 @login_required
 def editar_perfil(request):
 
-    perfil = request.user.perfil_usuario
+    perfil = request.user.perfil
 
     if request.method == 'POST':
         form = perfil_form(request.POST, instance=perfil)
@@ -96,7 +96,7 @@ def editar_perfil(request):
 @login_required
 def ver_perfil(request):
 
-    perfil = request.user.perfil_usuario
+    perfil = request.user.perfil
 
     return render(request, "accounts/ver_perfil.html",{
         "perfil":perfil
@@ -111,7 +111,7 @@ def cerrar_sesion(request):
 @login_required
 def crear_invitacion(request):
 
-    gym = request.user.perfil_usuario.gym_activo
+    gym = request.user.perfil.gym_activo
 
     if not gym:
         return redirect("elegir gym")
@@ -138,8 +138,8 @@ def crear_invitacion(request):
             elif expira == "7d":
                 invitacion.expira_en = timezone.now() + timedelta(days=7)
 
-            invitacion.gym = request.user.perfil_usuario.gym_activo
-            Invitacion.creado_por = request.user
+            invitacion.gym = request.user.perfil.gym_activo
+            invitacion.creado_por = request.user
 
             invitacion.save()
 
@@ -163,7 +163,7 @@ def seleccionar_gym(request):
 
         membership = memberships.filter(gym_id=gym_id,).first()
         if membership:
-            perfil = request.user.perfil_usuario
+            perfil = request.user.perfil
             perfil.gym_activo = membership.gym
             perfil.save()
 
@@ -177,7 +177,7 @@ def seleccionar_gym(request):
 @login_required
 def ver_invitaciones(request):
 
-    gym = request.user.perfil_usuario.gym_activo
+    gym = request.user.perfil.gym_activo
 
     member = Membership.objects.filter(gym=gym)
     

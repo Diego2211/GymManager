@@ -75,7 +75,7 @@ class Gym(BaseModel):
 
 class Perfil_usuario(BaseModel):
 
-    usuario = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    usuario = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="perfil")
 
     nombre = models.CharField(max_length=40, blank=True)
 
@@ -153,6 +153,15 @@ class Invitacion(BaseModel):
 
     def generar_codigo_legible(self):
         return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+    
+    def estado(self):
+        if self.esta_expirada():
+            return "expirada"
+        elif self.usos_actuales >= self.usos_maximos:
+            return "sin_usos"
+        elif self.activa:
+            return "activa"
+        return "inactiva"
 
     def save(self, *args, **kwargs):
         if not self.codigo:

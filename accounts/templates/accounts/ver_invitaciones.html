@@ -3,15 +3,62 @@
 {% block content %}
 
 <h1>Invitaciones</h1>
+{% for i in invitaciones %}
+<div class="card mb-3 p-3">
 
-<div> 
-    {% for i in invitaciones %}
-    <p><strong>Codigo:</strong> {{ i.codigo }}</p>
-    <p><strong>Rol:</strong> {{ i.rol }}</p>
-    <p><strong>Creado el:</strong> {{ i.created_at|date:"d \\d\\e F \\d\\e Y" }} </p>
-    <p><strong>creado por:</strong> {{ i.creado_por.perfil_usuario.nombre }} {{ i.creado_por.perfil_usuario.apellido }}</p>
-    <p><strong>fecha de expiracion:</strong> {{i.expira_en}}</p>
-    <p><strong>Usado por:</strong> {% for m in membership %} {% if i.codigo == membership.invitacion.codigo %} {{ membership.usuario.perfil_usuario.apellido }}, {{ membership.usuario.perfil_usuario.nombre }} {% endif %} {% endfor %} </p>
-    {% endfor %}
+    <div class="d-flex justify-content-between">
+        <h5 id="codigo-{{ i.id }}">{{ i.codigo }}</h5>
+        <button 
+        class="btn btn-sm btn-outline-secondary"
+        onclick="copiarCodigo('{{ i.codigo }}', this)">
+        Copiar
+        </button>
+
+        {% if i.estado == "activa" %}
+            <span class="badge bg-success">Activa</span>
+        {% elif i.estado == "sin_usos" %}
+            <span class="badge bg-warning text-dark">Sin usos</span>
+        {% elif i.estado == "expirada" %}
+            <span class="badge bg-danger">Expirada</span>
+        {% else %}
+            <span class="badge bg-secondary">Inactiva</span>
+        {% endif %}
+    </div>
+
+    <p class="mb-1">
+        <strong>Rol:</strong> {{ i.rol }}
+    </p>
+
+    <p class="mb-1">
+        <strong>Usos:</strong> {{ i.usos_actuales }}/{{ i.usos_maximos }}
+    </p>
+
+    <p class="mb-1">
+        <strong>creado por:</strong> {{ i.creado_por.perfil.nombre }} {{ i.creado_por.perfil.apellido }}
+    </p>
+
+    <p class="mb-1">
+        <strong>Usado por:</strong> 
+        {% for m in membership %} 
+
+        {% if i.codigo == m.invitacion.codigo %} 
+
+        {{ m.usuario.perfil.nombre }} {{ m.usuario.perfil.apellido }},
+
+        {% endif %} 
+        
+        {% endfor %} 
+    </p>
+
+    <p class="mb-0">
+        <strong>Expira:</strong>
+        {% if i.expira_en %}
+            {{ i.expira_en|date:"d/m/Y H:i" }}
+        {% else %}
+            Sin límite
+        {% endif %}
+    </p>
+
 </div>
+{% endfor %}
 {% endblock %}

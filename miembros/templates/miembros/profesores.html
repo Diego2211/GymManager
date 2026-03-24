@@ -1,0 +1,11 @@
+{% extends "miembros/base.html" %}
+
+{% block content %}
+{% for p in profesores %}
+<h4>{{p.rol}}: {{p.usuario.perfil.nombre}} {{p.usuario.perfil.apellido}}</h4>
+<p>Inscripcion: {{p.fecha_union|date:"d \\d\\e F \\d\\e Y"}}
+   dni: {{p.usuario.perfil.dni}}
+</p>
+{% endfor %}
+
+{% endblock %}

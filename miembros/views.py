@@ -13,9 +13,19 @@ def index(request):
     return render(request, "miembros/base.html")
 
 
+def profesores(request):
+    gym = request.user.perfil.gym_activo
+    membership = Membership.objects.filter(gym=gym,
+                                           activo=True)
+    
+    return render(request, "miembros/profesores.html",{
+        "profesores": membership
+    })
+
+
 @login_required
 def miembros(request):
-    gym = request.user.perfil_usuario.gym_activo
+    gym = request.user.perfil.gym_activo
     miembro = Alumnos.objects.filter(gym=gym)
     return render(request, "miembros/miembros.html", {
         "miembros": miembro
@@ -24,7 +34,7 @@ def miembros(request):
 
 @login_required
 def clases(request):
-    gym = request.user.perfil_usuario.gym_activo
+    gym = request.user.perfil.gym_activo
     clase = Clases.objects.filter(gym=gym)
     profesor = Membership.objects.filter(gym=gym)
     return render(request, "miembros/clases.html", {
@@ -35,8 +45,8 @@ def clases(request):
 
 @login_required
 def clase(request, slug):
-    gym = request.user.perfil_usuario.gym_activo
-    clase = get_object_or_404(Clases, slug=slug)
+    gym = request.user.perfil.gym_activo
+    clase = get_object_or_404(Clases, slug=slug, gym=gym)
     inscripciones_activos = Inscripciones.objects.filter(gym=gym,
         clase=clase,
         activo=True
@@ -55,7 +65,7 @@ def clase(request, slug):
 @login_required
 def ingreso_miembro(request):
 
-    gym = request.user.perfil_usuario.gym_activo
+    gym = request.user.perfil.gym_activo
     
     msg = str(gym)
 
@@ -77,16 +87,10 @@ def ingreso_miembro(request):
     })
 
 
-
-
-
-
-
-
 @login_required
 def inscribir_alumno(request):
     msg = "Inscribir alumno"
-    gym = request.user.perfil_usuario.gym_activo
+    gym = request.user.perfil.gym_activo
     query = request.GET.get("q")
 
     alumnos = Alumnos.objects.filter(gym=gym)
@@ -118,7 +122,7 @@ def inscribir_alumno(request):
 
 @login_required
 def crear_clase(request):
-    gym = request.user.perfil_usuario.gym_activo
+    gym = request.user.perfil.gym_activo
     if not gym:
         return redirect("elegir gym")
     msg = "Crear clase"

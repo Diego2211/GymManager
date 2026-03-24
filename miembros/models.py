@@ -64,11 +64,11 @@ class Clases(BaseModel):
                 contador += 1
             self.slug = slug
         super().save(*args, **kwargs)
+    
 
-    
-    
     def __str__(self):
-        return f"{self.clase}"
+        usuario = self.profesor.usuario.perfil
+        return f"{self.clase} - {usuario.nombre} {usuario.apellido}"
     
     class Meta:
         unique_together = ["gym", "slug"]

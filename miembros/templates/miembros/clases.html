@@ -1,15 +1,21 @@
 {% extends "miembros/base.html" %}
 
 {% block content %}
-
+<div class="row"></div>
 {% for clas in clases %}
-<h1>Clase: {{clas.clase}}</h1>
 
-<h2>Horario: {{clas.horario}}
-    profesor: {{clas.profesor.nombre}} {{clas.profesor.apellido}}
-    cuota: {{clas.cuota_mensual}}
-</h2>
-<button><a href="{% url 'clase' clas.slug %}">Alumnos</a></button>
+  <div class="col-sm-6 mb-3 mb-sm-0">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{clas.clase}}</h5>
+        <p class="card-text">Horario: {{clas.dia}}
+    profesor: {{clas.profesor.usuario.perfil.nombre}} {{clas.profesor.usuario.perfil.apellido}}
+    cuota: {{clas.cuota_mensual}}</p>
+        <a href="{% url 'clase' clas.slug %}" class="btn btn-primary">Ver clase</a>
+      </div>
+    </div>
+  </div>
+
 {% endfor %}
-
+</div>
 {% endblock %}
