@@ -10,6 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
+import dj_database_url
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -77,14 +80,7 @@ WSGI_APPLICATION = 'GymManager.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "gimnasio_db",
-        "USER": "Admin_db_gymManager",
-        "PASSWORD": "GymManager_Admin",
-        "HOST": "127.0.0.1",
-        "PORT": "3306",
-    }
+    "default": dj_database_url.parse(os.environ.get("postgresql://gymmanager_admin:MIl04oLQhQ5ULnKtaogr1Zhjk7UOvLBS@dpg-d711epngi27c73f40hig-a/gymmanager_db"))
 }
 
 
