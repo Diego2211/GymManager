@@ -29,7 +29,7 @@ class OnboardingMiddleware:
             perfil = getattr(user, "perfil", None)
 
             # 🔴 1. Perfil obligatorio
-            if not perfil or not perfil.nombre:
+            if not perfil or not perfil.nombre or not perfil.apellido or not perfil.dni or not perfil.celular:
                 return redirect("editar perfil")
 
             # 🔴 2. Membership obligatorio
