@@ -38,11 +38,19 @@ def iniciar_sesion(request):
             user = form.get_user()
 
             login(request, user)
-            if user is not None:
-                
-                login(request, user)
+            perfil = request.user.perfil
+            if not perfil or not perfil.nombre:
+                return redirect("editar perfil")
 
-                return redirect("/clases/")
+            # 🔴 Membership
+            if not Membership.objects.filter(usuario=user, activo=True).exists():
+                return redirect("crear gimnasio")
+
+            # 🔴 Gym activo
+            if not perfil.gym_activo:
+                return redirect("elegir gym")
+
+            return redirect("index")
     else:
         form = inicio_sesion_form()
         
@@ -189,6 +197,7 @@ def ver_invitaciones(request):
     })
 
 
+@login_required
 def aceptar_invitacion(request):
 
     if request.method == "POST":

@@ -3,32 +3,58 @@
 {% block content %}
 
 <div class="container mt-5">
+    <div class="row">
 
-<div class="row justify-content-center">
+        <!-- 🔑 Unirse con código -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="mb-3">Unirse con código</h4>
 
-<div class="col-md-6">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Código de invitación</label>
+                            <input type="text" name="codigo" class="form-control" placeholder="Ej: ABC123" required>
+                        </div>
 
-<div class="card shadow">
+                        <button type="submit" name="accion" value="codigo" class="btn btn-primary w-100">
+                            Unirse
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-<div class="card-header">
-<h4 class="text-center">Crea tu gimnasio</h4>
-</div>
+        <!-- 🏋️ Lista de gimnasios -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="mb-3">Crear gimnasio</h4>
 
-<div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                    
+                    <div class="text-center mt-4">
+                        <button href="{% url 'index' %}" class="btn btn-primary" type="submit">
+                            Crear gimnasio
+                        </button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-<form method="post" class="mt-4">
-    {% csrf_token %}
-    {{ form.as_p }}
+    </div>
 
-    <button type="submit" class="btn btn-primary">Guardar</button>
-</form>
-</div>
-
-</div>
-
-</div>
-
-</div>
+    <!-- ➕ Crear gym -->
+    <div class="text-center mt-4">
+        <a href="{% url 'crear gimnasio' %}" class="btn btn-outline-primary">
+            Crear gimnasio
+        </a>
+    </div>
 
 </div>
 

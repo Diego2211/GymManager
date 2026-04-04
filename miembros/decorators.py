@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import user_passes_test
 from .models import Membership
+from django.shortcuts import redirect
 
 
 def admin_required(view_decorator):
@@ -48,3 +49,21 @@ def requiere_roles(*roles_permitidos):
             return view_func(request, *args, **kwargs)
         return wrapper
     return decorator
+
+
+
+def requiere_onboarding(view_func):
+    def wrapper(request, *args, **kwargs):
+        user = request.user
+
+        if not user.is_authenticated:
+            return redirect("login")
+
+        if not hasattr(user, 'profile') or not user.profile.completo:
+            return redirect("completar_perfil")
+
+        if not Membership.objects.filter(usuario=user).exists():
+            return redirect("onboarding")
+
+        return view_func(request, *args, **kwargs)
+    return wrapper
