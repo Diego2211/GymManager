@@ -1,0 +1,30 @@
+{% extends 'miembros/base.html' %}
+
+{% block content %}
+
+<form method="POST">
+    {% csrf_token %}
+<button class="btn btn-primary" type="submit">Ver Avisos</button>
+</form>
+<div class="row">
+{% for aviso in avisos %}
+
+  <div class="col-sm-6 mb-3 mb-sm-0">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">
+        {% if aviso.tipo == 'vencimiento' %}
+          <i class="fa-solid fa-circle" style="color:yellow"></i>
+        {% elif aviso.tipo == 'impago' %}
+          <i class="fa-solid fa-circle" style="color:red"></i>
+        {% endif %}
+        {{aviso.tipo}}</h5>
+        <p class="card-text">{{aviso.mensaje}}</p>
+        <a href="#" class="btn btn-primary">Go somewhere</a>
+      </div>
+    </div>
+  </div>
+
+{% endfor %}
+</div>
+{% endblock %}

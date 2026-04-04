@@ -1,46 +1,99 @@
-{% extends "miembros/base.html" %}
+{% extends 'miembros/base.html' %}
 
 {% block content %}
 
-<h1>{{clas.clase}}  {{clas.profesor.perfil.nombre}} {{clas.profesor.perfil.apellido}} </h1>
+<h1>
+  {{ clas.clase }} 
+  <small>
+    - {{ clas.profesor.usuario.perfil.nombre }} {{ clas.profesor.usuario.perfil.apellido }}
+  </small>
+</h1>
+<a href="{% url 'inscripcion' %}?clase={{ clas.id }}" class="btn btn-success">
+  ➕ Inscribir alumno
+</a>
+<div class="acciones">
+  {% if request.membership.rol == "owner" or request.membership.rol == "admin" %}
+    <a href="{% url 'editar_clase' clas.id %}" class="btn btn-warning">✏️ Editar clase</a>
+    <a href="{% url 'eliminar_clase' clas.id %}" class="btn btn-danger">🗑 Eliminar clase</a>
+  {% endif %}
+</div>
 
-<h1>{{class.ID}}</h1>
+<hr>
 
-{% if inscripciones_activos %}
-   {% for insc in inscripciones_activos %}
-      <h3>
-         Alumno: {{ insc.alumno.nombre }} {{ insc.alumno.apellido }}
-      </h3>
+<h2>🟢 Alumnos Activos</h2>
 
-      <p>
-         DNI: {{ insc.alumno.dni }} <br>
-         Fecha inscripción: {{ insc.fecha_inscripcion }} <br>
-         Cuota: {{ insc.clase.cuota_mensual }}
-      </p>
+{% for insc in inscripciones_activos %}
+<div class="card">
+  <b>{{ insc.alumno.nombre }} {{ insc.alumno.apellido }}</b>
 
-      <hr>
-    {% endfor %}
-{% else %}
-    <p>No hay alumnos inscriptos en esta clase.</p>
-{% endif %}
+  <p>
+    DNI: {{ insc.alumno.dni }} <br>
+    Inscripción: {{ insc.fecha_inscripcion }} <br>
+    Cuota: {{ insc.clase.cuota_mensual }}
+  </p>
 
-{% if inscripciones_inactivos %}
-   {% for insc in inscripciones_inactivos %}
-      <h3>
-         Alumno: {{ insc.alumno.nombre }} {{ insc.alumno.apellido }}
-      </h3>
+  <div class="acciones">
+    <a href="{% url 'editar_inscripcion' insc.id %}" class="btn btn-warning">✏️ Editar</a>
 
-      <p>
-         DNI: {{ insc.alumno.dni }} <br>
-         Fecha inscripción: {{ insc.fecha_inscripcion }} <br>
-         Cuota: {{ insc.clase.cuota_mensual }}
-      </p>
+    <form method="POST" action="{% url 'baja_inscripcion' insc.id %}">
+      {% csrf_token %}
+      <button class="btn btn-danger">❌ Dar de baja</button>
+    </form>
+  </div>
+</div>
+{% empty %}
+<p>No hay alumnos activos</p>
+{% endfor %}
 
-      <hr>
-    {% endfor %}
-{% else %}
-   <p>No hay alumnos inactivos</p>
+<hr>
 
-{% endif %}
+<h2>🔴 Alumnos Inactivos</h2>
 
+{% for insc in inscripciones_inactivos %}
+<div class="card inactivo">
+  <b>{{ insc.alumno.nombre }} {{ insc.alumno.apellido }}</b>
+
+  <div class="acciones">
+    <form method="POST" action="{% url 'reactivar_inscripcion' insc.id %}">
+      {% csrf_token %}
+      <button class="btn btn-success">🔄 Reactivar</button>
+    </form>
+  </div>
+</div>
+{% empty %}
+<p>No hay alumnos inactivos</p>
+{% endfor %}
+
+
+<style>
+.card {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.card.inactivo {
+  background: #f8f9fa;
+  opacity: 0.8;
+}
+
+.acciones {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-warning { background: orange; color: white; }
+.btn-danger { background: red; color: white; }
+.btn-success { background: green; color: white; }
+</style>
 {% endblock %}
+

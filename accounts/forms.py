@@ -3,6 +3,7 @@ from .models import Gym, Perfil_usuario, User, Invitacion, Membership
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 
+
 class BaseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -15,6 +16,14 @@ class BaseForm(forms.ModelForm):
 
 class inicio_sesion_form(AuthenticationForm):
     username = forms.EmailField(label="Email")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields.values():
+            field.widget.attrs.update({
+                'class': 'form-control'
+            })
 
         
 class perfil_form(BaseForm):
@@ -53,11 +62,13 @@ class registro_form(BaseForm):
 
         return user
     
+
 class gym_form(BaseForm):
 
     class Meta:
         model = Gym
         exclude = ['slug']
+
 
 class invitacion_form(BaseForm):
     EXPIRACION_CHOICES = [

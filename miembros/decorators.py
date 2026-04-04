@@ -1,4 +1,6 @@
 from django.contrib.auth.decorators import user_passes_test
+from .models import Membership
+
 
 def admin_required(view_decorator):
     decorated_view = user_passes_test(
@@ -23,3 +25,26 @@ def staff_required(view_decorator):
     )(view_decorator)
 
     return decorated_view
+
+from django.http import HttpResponseForbidden
+
+def requiere_roles(*roles_permitidos):
+    def decorator(view_func):
+        def wrapper(request, *args, **kwargs):
+            gym = request.user.perfil.gym_activo
+
+            try:
+                membership = Membership.objects.get(
+                    gym=gym,
+                    usuario=request.user
+                )
+            except Membership.DoesNotExist:
+                return HttpResponseForbidden()
+
+            if membership.rol not in roles_permitidos:
+                return HttpResponseForbidden()
+
+            request.membership = membership  # 👈 útil
+            return view_func(request, *args, **kwargs)
+        return wrapper
+    return decorator

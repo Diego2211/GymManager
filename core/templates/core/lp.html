@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GymManager – Gestión inteligente para tu gimnasio</title>
+{% load static %}
+<link rel="stylesheet" href="{% static 'core/css/lp.css' %}">
+<!-- <otro exp link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"> -->
+<link rel="stylesheet" href="lp.css">
+<!-- Fuente monospace experimental-->
+ <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo+Mono:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet"> -->
+</head>
+<body>
+<!-- NAV -->
+<nav>
+  <div class="logo">Gym<span>Manager</span></div>
+  <!-- Boton para ir al login -->
+  <a href="{% url 'login' %}" class="btn-cta">Probalo ahora</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+    Software de gestión para gimnasios
+  </div>
+
+  <h1>
+    Olvidate del papel.<br>
+    Gestioná tu gimnasio<br>
+    <span class="highlight">desde cualquier lugar.</span>
+  </h1>
+
+  <p>
+    Creá horarios de clases, administrá profesores y miembros, todo en un solo lugar. Más orden, menos carga administrativa, cero pérdida de información.
+  </p>
+
+  <div class="hero-actions">
+    <!-- Boton para ir al login -->
+    <a href="{% url 'login' %}" class="btn-cta">Probalo ahora</a>
+    <a href="#features" class="btn-secondary">Ver funciones</a>
+  </div>
+</section>
+
+<!-- DISPOSITIVOS -->
+<section class="devices-section">
+  <p class="section-label">Disponible en todos tus dispositivos</p>
+  <h2 class="section-title">Accedé desde donde estés</h2>
+  <p class="section-sub">PC, tablet o celular. GymManager funciona en el navegador, sin instalaciones.</p>
+
+  <div class="devices-row">
+    <!-- Desktop -->
+    <div class="mockup-desktop">
+      <div class="screen">
+        <div class="screen-ui">
+          <div class="ui-bar accent"></div>
+          <div class="ui-card">
+            <div class="ui-tag"></div>
+            <div class="ui-row">
+              <div class="ui-dot"></div><div class="ui-line" style="flex:1"></div>
+            </div>
+            <div class="ui-row">
+              <div class="ui-dot green"></div><div class="ui-line short" style="flex:1"></div>
+            </div>
+            <div class="ui-row">
+              <div class="ui-dot orange"></div><div class="ui-line" style="flex:1"></div>
+            </div>
+          </div>
+          <div class="ui-card">
+            <div class="ui-tag"></div>
+            <div class="ui-row">
+              <div class="ui-dot"></div><div class="ui-line" style="flex:1"></div>
+            </div>
+            <div class="ui-row">
+              <div class="ui-dot green"></div><div class="ui-line short" style="flex:1"></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:8px">
+            <div style="background:var(--blue);height:26px;border-radius:6px;flex:1"></div>
+            <div style="background:var(--blue-xlight);height:26px;border-radius:6px;flex:2"></div>
+          </div>
+        </div>
+      </div>
+      <div class="base"></div>
+      <div class="stand"></div>
+      <div class="foot"></div>
+    </div>
+
+    <!-- Mobile -->
+    <div class="mockup-mobile">
+      <div class="screen">
+        <div class="screen-ui" style="padding:8px">
+          <div class="ui-bar accent" style="width:50%;margin-bottom:10px"></div>
+          <div class="ui-card" style="padding:6px">
+            <div class="ui-tag" style="width:30px"></div>
+            <div class="ui-row">
+              <div class="ui-dot" style="width:7px;height:7px"></div>
+              <div class="ui-line" style="flex:1;height:4px"></div>
+            </div>
+            <div class="ui-row">
+              <div class="ui-dot green" style="width:7px;height:7px"></div>
+              <div class="ui-line short" style="flex:1;height:4px"></div>
+            </div>
+          </div>
+          <div class="ui-card" style="padding:6px">
+            <div class="ui-tag" style="width:24px"></div>
+            <div class="ui-row">
+              <div class="ui-dot orange" style="width:7px;height:7px"></div>
+              <div class="ui-line" style="flex:1;height:4px"></div>
+            </div>
+          </div>
+          <div style="background:var(--blue);height:20px;border-radius:6px;margin-top:6px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <p class="section-label">Funcionalidades</p>
+  <h2 class="section-title">Todo lo que necesita tu gimnasio</h2>
+  <p class="section-sub">Reemplazá planillas y papeles por un sistema claro, rápido y siempre disponible.</p>
+
+  <div class="features-grid">
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
+      </div>
+      <h3>Horarios de clases</h3>
+      <p>Creá y editá turnos de cualquier actividad en segundos. Evitá superposiciones y mantené un calendario claro para todos.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      </div>
+      <h3>Gestión de profesores</h3>
+      <p>Asigná instructores a cada clase, visualizá su carga horaria y mantenelos sincronizados sin llamadas ni mensajes.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <h3>Miembros inscriptos</h3>
+      <p>Registrá socios, vinculálos a clases y consultá su historial de asistencia. Sin carpetas, sin hojas sueltas.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+      </div>
+      <h3>Visión general en tiempo real</h3>
+      <p>Desde el panel principal visualizá ocupación de clases, disponibilidad y estado de tu gimnasio al instante.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h3>Sin pérdida de información</h3>
+      <p>Todo queda guardado en la nube. Adiós a planillas borradas, papeles perdidos o datos mal transcritos.</p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/><path d="M9 6h6M9 10h6M9 14h4"/></svg>
+      </div>
+      <h3>Acceso multiplataforma</h3>
+      <p>Funciona en cualquier navegador, desde la PC de la recepción hasta el celular del entrenador. Sin instalaciones.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- BENEFICIOS -->
+<section class="benefits-strip">
+  <div class="benefit-item">
+    <div class="benefit-number">0<span>%</span></div>
+    <div class="benefit-desc">Papeles ni planillas físicas</div>
+  </div>
+  <div class="benefit-item">
+    <div class="benefit-number">100<span>%</span></div>
+    <div class="benefit-desc">Disponible desde cualquier dispositivo</div>
+  </div>
+  <div class="benefit-item">
+    <div class="benefit-number">3<span>x</span></div>
+    <div class="benefit-desc">Más rápido crear y editar horarios</div>
+  </div>
+  <div class="benefit-item">
+    <div class="benefit-number">∞</div>
+    <div class="benefit-desc">Clases, profesores y miembros sin límite</div>
+  </div>
+</section>
+
+<!-- FUNCIONALIDAD -->
+<section class="how">
+  <p class="section-label">¿Cómo funciona?</p>
+  <h2 class="section-title">En tres pasos empezás hoy</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Creá tu cuenta</h3>
+      <p>Registrá tu gimnasio en minutos. Sin datos bancarios, sin contratos.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Cargá tu información</h3>
+      <p>Agregá clases, horarios, profesores y miembros desde el panel.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Gestioná con claridad</h3>
+      <p>Modificá, consultá y organizá todo desde cualquier dispositivo en tiempo real.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<!-- Boton para ir al login -->
+<section class="cta-banner">
+  <h2>Tu gimnasio merece una gestión profesional</h2>
+  <p>Dejá el desorden atrás. GymManager es la forma más sencilla de organizar todo lo que pasa en tu establecimiento.</p>
+  <a href="{% url 'login' %}" class="btn-cta" style="font-size:1.05rem;padding:16px 44px;">Probalo ahora</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Gym<span>Manager</span></div>
+  <p>© 2026 GymManager. Todos los derechos reservados.</p>
+</footer>
+
+</body>
+</html>

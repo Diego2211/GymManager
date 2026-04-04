@@ -34,17 +34,7 @@ class Alumnos(BaseModel):
 
 class Clases(BaseModel):
 
-    DIA_SEMANA = [("lunes", "Lunes"),
-                  ("martes", "Martes"),
-                  ("miercoles", "Miércoles"),
-                  ("jueves", "Jueves"),
-                  ("viernes", "Viernes"),
-                  ("sabado", "Sábado"),
-                  ("domingo", "Domingo")]
-
     gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
-
-    dia = models.CharField(max_length=20, choices=DIA_SEMANA)
 
     clase = models.CharField(max_length=30)
 
@@ -67,11 +57,31 @@ class Clases(BaseModel):
     
 
     def __str__(self):
-        usuario = self.profesor.usuario.perfil
-        return f"{self.clase} - {usuario.nombre} {usuario.apellido}"
+        prof = self.profesor.usuario.perfil
+        return f"{self.clase} - {prof.nombre} {prof.apellido}"
     
     class Meta:
         unique_together = ["gym", "slug"]
+
+
+class Horario(BaseModel):
+    DIAS = [
+        ("lunes", "Lunes"),
+        ("martes", "Martes"),
+        ("miercoles", "Miércoles"),
+        ("jueves", "Jueves"),
+        ("viernes", "Viernes"),
+        ("sabado", "Sábado"),
+        ("domingo", "Domingo"),
+    ]
+
+    clase = models.ForeignKey(Clases, on_delete=models.CASCADE, related_name="horarios")
+
+    dia = models.CharField(max_length=20, choices=DIAS)
+
+    hora_inicio = models.TimeField()
+    
+    hora_fin = models.TimeField()
 
 
 class Inscripciones(BaseModel):
@@ -83,6 +93,8 @@ class Inscripciones(BaseModel):
     alumno = models.ForeignKey(Alumnos, on_delete=models.CASCADE)
 
     fecha_inscripcion = models.DateField(auto_now_add=True)
+
+    fecha_vencimiento = models.DateField(db_index=True, null=True)
 
     creado_por = models.ForeignKey(settings.AUTH_USER_MODEL,
                                    on_delete=models.SET_NULL,
@@ -119,13 +131,7 @@ class Avisos(BaseModel):
 
     inscripcion = models.ForeignKey(Inscripciones, on_delete=models.CASCADE)
 
-    tipo = models.CharField(
-        max_length=20,
-        choices=[
-            ('vencimiento', 'Próximo a vencer'),
-            ('impago', 'Cuota impaga')
-        ]
-    )
+    tipo = models.CharField(max_length=50)
 
     mensaje = models.TextField()
 
@@ -134,3 +140,6 @@ class Avisos(BaseModel):
     visto_por_profesor = models.BooleanField(default=False)
 
     fecha_visto = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ["inscripcion", "tipo"]

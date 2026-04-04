@@ -1,6 +1,98 @@
-body{
-    background-color:darkslategray;
+body {
+    background-image: url('https://media.tenor.com/Qs3IUg6ycsQAAAAM/my-honest-reaction-meme.gif');
 }
-div{
-    background-color:#b9bdc4;
+
+/* SIDEBAR */
+
+.sidebar{
+    background-color:#7847ff;
+    height:100vh;
+    padding:20px;
+}
+
+.sidebar .nav-link{
+    color:#09085e;
+    font-weight:500;
+    padding:10px;
+    border-radius:6px;
+}
+.sidebar i{
+font-size:30px;
+margin-right:10px;
+}
+
+.sidebar .nav-link:hover{
+    background-color:#a292f8;
+    color:rgb(0, 0, 0);
+    
+}
+
+/* contenido */
+
+.col-10{
+    padding:30px;
+}
+/* PERFIL DROPDOWN */
+.perfil-btn {
+    background-color: rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    padding: 8px 12px;
+    color: #fff !important;
+    transition: background 0.2s;
+}
+
+.perfil-btn:hover {
+    background-color: rgba(255, 255, 255, 0.22);
+}
+
+.perfil-btn::after {
+    margin-left: auto;
+    border-top-color: rgba(255,255,255,0.7);
+}
+.perfil-btn::after {
+    transform: rotate(-90deg);
+    transition: transform 0.2s;
+}
+
+.perfil-img {
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255,255,255,0.3);
+}
+
+.perfil-nombre {
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+}
+
+.dropdown-menu-dark {
+    background-color: #3a20a8;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 6px;
+}
+
+.dropdown-menu-dark .dropdown-item {
+    border-radius: 6px;
+    font-size: 14px;
+    padding: 8px 12px;
+    color: rgba(255,255,255,0.85);
+    transition: background 0.15s;
+}
+
+.dropdown-menu-dark .dropdown-item:hover {
+    background-color: rgba(255,255,255,0.12);
+    color: #fff;
+}
+
+.dropdown-menu-dark .dropdown-divider {
+    border-color: rgba(255,255,255,0.15);
+    margin: 4px 0;
+}
+.sidebar .dropdown-menu {
+    left: 100% !important;
+    top: 0 !important;
+    margin-left: 8px !important;
+    transform: none !important;
 }

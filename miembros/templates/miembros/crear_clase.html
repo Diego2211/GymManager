@@ -1,0 +1,71 @@
+{% extends "miembros/base.html" %}
+
+{% block content%}
+
+
+<h1>{{msg}}</h1>
+<form method="POST">
+
+{% csrf_token %}
+
+{{ form.as_p }}
+
+<div id="horarios">
+
+    {{ formset.management_form }}
+    {% for f in formset %}
+      <div class="horario-form">
+        Dia:{{ f.dia }}
+        Hora inicio:{{ f.hora_inicio }}
+        Hora final:{{ f.hora_fin }}
+        <button type="button" class="btn btn-danger" onclick="eliminarHorario(this)">❌Eliminar</button>
+      </div>
+    {% endfor %}
+</div>
+
+<button type="button" class="btn btn-success" onclick="agregarHorario()">➕ Agregar dia</button>
+
+
+<button type="submit" class="btn btn-primary">Crear clase</button>
+
+</form>
+<script>
+function agregarHorario() {
+    const totalForms = document.querySelector('[name="horarios-TOTAL_FORMS"]');
+    const currentCount = parseInt(totalForms.value);
+
+    const container = document.getElementById('horarios');
+
+    // 👇 agarramos SOLO un form real
+    const firstForm = document.querySelector('.horario-form').cloneNode(true);
+
+    let html = firstForm.innerHTML.replace(/-0-/g, `-${currentCount}-`);
+    firstForm.innerHTML = html;
+
+    // limpiar inputs
+    firstForm.querySelectorAll('input, select').forEach(input => {
+        if (input.type !== 'hidden') {
+            input.value = '';
+        }
+    });
+
+    container.appendChild(firstForm);
+    totalForms.value = currentCount + 1;
+}
+
+function eliminarHorario(btn) {
+    const forms = document.querySelectorAll('.horario-form');
+
+    if (forms.length <= 1) {
+        alert("Debe haber al menos un horario");
+        return;
+    }
+
+    btn.closest('.horario-form').remove();
+
+    // actualizar TOTAL_FORMS
+    const totalForms = document.querySelector('[name="horarios-TOTAL_FORMS"]');
+    totalForms.value = forms.length - 1;
+}
+</script>
+{% endblock %}

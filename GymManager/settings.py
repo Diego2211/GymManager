@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django_crontab',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -117,9 +118,17 @@ USE_I18N = True
 
 USE_TZ = True
 
+TIME_FORMAT = 'H:i'
+
+USE_L10N = False
+
 AUTH_USER_MODEL = "accounts.User"
 
 LOGIN_URL = "login"
+
+CRONJOBS = [
+    ('0 9 * * *', 'miembros.tasks.generar_avisos'),
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/

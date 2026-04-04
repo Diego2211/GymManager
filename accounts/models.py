@@ -180,7 +180,7 @@ class Membership(BaseModel):
 
     ROLES = [
             ("owner", "Dueño"),
-            ("Admin_Gym", "Administrador"),
+            ("admin", "Administrador"),
             ("profesor", "Profesor"),
     ]
 
@@ -197,7 +197,7 @@ class Membership(BaseModel):
     invitacion = models.ForeignKey(Invitacion, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.usuario.perfil_usuario.nombre} {self.usuario.perfil_usuario.apellido} - {self.rol}"
+        return f"{self.usuario.perfil.nombre} {self.usuario.perfil.apellido} - {self.rol}"
 
     class Meta:
         unique_together = ["usuario", "gym"]
