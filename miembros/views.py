@@ -14,8 +14,8 @@ from django.utils import timezone
 from .task import generar_avisos
 
 # Create your views here.
-@requiere_roles("owner", "admin", "profesor")
 @login_required
+@requiere_roles("owner", "admin", "profesor")
 def index(request):
     nombre = str(request.user.perfil.nombre)
     return render(request, "miembros/base.html",{
@@ -23,8 +23,8 @@ def index(request):
     })
 
 
-@requiere_roles("owner", "admin")
 @login_required
+@requiere_roles("owner", "admin")
 def profesores(request):
     gym = request.user.perfil.gym_activo
     membership = Membership.objects.filter(gym=gym,
@@ -35,8 +35,8 @@ def profesores(request):
     })
 
 
-@requiere_roles("owner", "admin")
 @login_required
+@requiere_roles("owner", "admin")
 def miembros(request):
     gym = request.user.perfil.gym_activo
     miembro = Alumnos.objects.filter(gym=gym)
@@ -45,12 +45,11 @@ def miembros(request):
     })
 
 
-@requiere_roles("owner", "admin", "profesor")
 @login_required
+@requiere_roles("owner", "admin", "profesor")
 def clases(request):
-    gym = request.user.perfil.gym_activo
-    membership = Membership.objects.get(gym=gym,
-                                           usuario=request.user)
+    gym = request.gym
+    membership = request.membership
     
     if es_admin(membership):
         clase = Clases.objects.filter(gym=gym)
@@ -65,8 +64,8 @@ def clases(request):
     })
 
 
-@requiere_roles("owner", "admin", "profesor")
 @login_required
+@requiere_roles("owner", "admin", "profesor")
 def clase(request, slug):
     gym = request.user.perfil.gym_activo
     clase = get_object_or_404(Clases, slug=slug, gym=gym)
@@ -116,8 +115,8 @@ def editar_inscripcion(request, insc_id):
         "form": form})
 
 
-@requiere_roles("owner", "admin", "profesor")
 @login_required
+@requiere_roles("owner", "admin", "profesor")
 def reactivar_inscripcion(request, insc_id):
     insc = get_object_or_404(Inscripciones, id=insc_id)
 
@@ -127,8 +126,8 @@ def reactivar_inscripcion(request, insc_id):
     return redirect("clase", slug=insc.clase.slug)
 
 
-@requiere_roles("owner", "admin", "profesor")
 @login_required
+@requiere_roles("owner", "admin", "profesor")
 def ingreso_miembro(request):
 
     gym = request.user.perfil.gym_activo
@@ -153,8 +152,8 @@ def ingreso_miembro(request):
     })
 
 
-@requiere_roles("owner", "admin", "profesor")
 @login_required
+@requiere_roles("owner", "admin", "profesor")
 def inscribir_alumno(request):
     msg = "Inscribir alumno"
     gym = request.user.perfil.gym_activo
@@ -199,8 +198,8 @@ def inscribir_alumno(request):
     })
 
 
-@requiere_roles("owner", "admin")
 @login_required
+@requiere_roles("owner", "admin")
 def crear_clase(request):
     gym = request.user.perfil.gym_activo
     if not gym:
@@ -268,14 +267,15 @@ def eventos(request):
         "max": max_hora.strftime("%H:%M:%S") if max_hora else "24:00:00",
         })
 
-@requiere_roles("owner", "admin", "profesor")
+
 @login_required
+@requiere_roles("owner", "admin", "profesor")
 def ver_calendario(request):
     return render(request, "miembros/calendario.html")
 
 
-@requiere_roles("owner", "admin", "profesor")
 @login_required
+@requiere_roles("owner", "admin", "profesor")
 def avisos(request):
 
     gym = request.user.perfil.gym_activo

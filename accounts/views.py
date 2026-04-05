@@ -7,6 +7,7 @@ from .models import Perfil_usuario, Gym, Invitacion, Membership, User
 from django.http import HttpResponseForbidden
 from django.utils import timezone
 from datetime import timedelta
+from miembros.permissions import es_admin, es_profesor
 
 
 
@@ -68,7 +69,7 @@ def crear_gimnasio(request):
 
         if form.is_valid():
             gym = form.save()
-            form.save()
+            
             Membership.objects.create(
                 usuario=request.user,
                 gym=gym,
@@ -121,13 +122,10 @@ def crear_invitacion(request):
 
     gym = request.user.perfil.gym_activo
 
-    if not gym:
-        return redirect("elegir gym")
-
     membership = Membership.objects.filter(usuario=request.user,
                                            gym=gym,
                                            activo=True).first()
-    if not membership or membership.rol not in ["owner", "admin"]:
+    if not es_admin(membership):
         return HttpResponseForbidden("No tenés permisos para crear invitaciones")
     
 

@@ -17,14 +17,17 @@ class OnboardingMiddleware:
             rutas_permitidas = [
                 reverse("editar perfil"),
                 reverse("crear gimnasio"),
-                reverse("crear gimnasio"),
+                reverse("registro"),
+                reverse("login"),
                 reverse("aceptar invitacion"),
                 reverse("elegir gym"),
                 reverse("cerrar sesion"),
+                reverse("landing page")
             ]
 
             if any(request.path.startswith(ruta) for ruta in rutas_permitidas):
                 return self.get_response(request)
+            
 
             perfil = getattr(user, "perfil", None)
 
