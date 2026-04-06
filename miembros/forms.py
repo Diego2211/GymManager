@@ -95,6 +95,6 @@ Horario_FormSet = inlineformset_factory(
     Horario,
     form=Horario_Form,
     formset=BaseHorarioFormSet,
-    extra=1,
+    extra=0,
     can_delete=True
 )

@@ -1,24 +1,95 @@
 {% extends "miembros/base.html" %}
 
-{% block content%}
+{% block content %}
 
+<h2 class="mb-4">{{ msg }}</h2>
 
-<form method="GET">
+<div class="row g-4" style="max-width:900px;">
 
-<input type="text" name="q" placeholder="Buscar alumno">
+  <!-- Columna izquierda: inscripción -->
+  <div class="col-md-7">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-4">
+        <h5 class="fw-semibold mb-3">
+          <i class="bi bi-person-fill-add me-2"></i>Inscribir alumno
+        </h5>
 
-<button type="submit">Buscar</button>
+        <!-- Buscador -->
+        <form method="GET" class="d-flex gap-2 mb-3">
+          <input
+            type="text"
+            name="q"
+            value="{{ query|default:'' }}"
+            placeholder="Buscar alumno por nombre..."
+            class="form-control form-control-sm"
+          >
+          <button type="submit" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-search"></i>
+          </button>
+        </form>
 
-</form>
-<h1>{{msg}}</h1>
-<form method="POST">
+        <form method="POST">
+          {% csrf_token %}
 
-{% csrf_token %}
+          {% for field in form %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+              <div class="text-danger" style="font-size:0.875rem;">{{ field.errors }}</div>
+            {% endif %}
+          </div>
+          {% endfor %}
 
-{{ form.as_p }}
+          {% if alumno_preseleccionado %}
+          <div class="alert alert-success py-2 px-3 mb-3" style="font-size:0.875rem;">
+            <i class="bi bi-check-circle me-1"></i>
+            <strong>{{ alumno_preseleccionado }}</strong> fue agregado y está seleccionado.
+          </div>
+          {% endif %}
 
-<button type="submit">Inscribir</button>
+          <button type="submit" name="inscribir" value="1" class="btn btn-primary">
+            <i class="bi bi-check-circle me-1"></i>Inscribir
+          </button>
+        </form>
 
-</form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Columna derecha: alumno nuevo -->
+  <div class="col-md-5">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-4">
+        <h5 class="fw-semibold mb-3">
+          <i class="bi bi-person-plus me-2"></i>Alumno nuevo
+        </h5>
+        <p class="text-muted mb-3" style="font-size:0.875rem;">
+          Cargá los datos y quedará seleccionado automáticamente.
+        </p>
+
+        <form method="POST">
+          {% csrf_token %}
+
+          {% for field in form_alumno %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+              <div class="text-danger" style="font-size:0.875rem;">{{ field.errors }}</div>
+            {% endif %}
+          </div>
+          {% endfor %}
+
+          <button type="submit" name="guardar_alumno" value="1" class="btn btn-outline-success w-100">
+            <i class="bi bi-floppy me-1"></i>Guardar alumno
+          </button>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
 
 {% endblock %}

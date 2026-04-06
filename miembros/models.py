@@ -2,6 +2,7 @@ from django.db import models
 from accounts.models import Gym, Membership
 from django.utils.text import slugify
 from django.conf import settings
+from datetime import date
 
 # Create your models here.
 class BaseModel(models.Model):
@@ -102,27 +103,57 @@ class Inscripciones(BaseModel):
     
     activo = models.BooleanField(default=True)
 
+    @property
+    def esta_al_dia(self):
+        hoy = date.today()
+
+        return Pagos.objects.filter(
+            inscripcion=self,
+            fecha_fin__gte=hoy
+            ).exists()
+    
+    def deuda(self):
+
+        hoy = date.today()
+    
+        # Buscar si hay un pago vigente (fecha_fin >= hoy)
+        pagos_periodo = Pagos.objects.filter(
+            inscripcion=self,
+            fecha_fin__gte=hoy
+            )
+    
+        if not pagos_periodo.exists():
+            return None  # No hay pago reciente, no mostramos deuda parcial
+    
+        # Sumar todos los pagos del período vigente
+        from django.db.models import Sum
+        total_pagado = pagos_periodo.aggregate(Sum('monto'))['monto__sum'] or 0
+    
+        diferencia = self.clase.cuota_mensual - total_pagado
+        return diferencia if diferencia > 0 else None
+
     class Meta:
         unique_together = ["clase", "alumno"]
 
 
 
-class Pagos(BaseModel):
+class Pagos(models.Model):
 
     gym = models.ForeignKey(Gym, on_delete=models.CASCADE)
+    inscripcion = models.ForeignKey(Inscripciones, on_delete=models.CASCADE)
 
-    Inscripcion = models.ForeignKey(Inscripciones, on_delete=models.CASCADE)
+    fecha_pago = models.DateField(auto_now_add=True)
 
-    fecha_pago = models.DateField()
+    fecha_inicio = models.DateField(default= None)
+    fecha_fin = models.DateField(default=None)
 
     monto = models.DecimalField(max_digits=10, decimal_places=2)
 
-    mes = models.IntegerField()
+    registrado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
 
-    anio = models.IntegerField()
-
-    class Meta:
-        unique_together = ["Inscripcion", "mes", "anio"]
+    def __str__(self):
+        return f"{self.inscripcion} ({self.fecha_inicio} - {self.fecha_fin})"
+    
 
 
 class Avisos(BaseModel):
