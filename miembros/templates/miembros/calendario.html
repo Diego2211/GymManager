@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h2>Calendario de clases</h2>
+<h2 class="mb-4">Calendario de clases</h2>
 
 <div id="calendar"></div>
 
@@ -11,103 +11,167 @@
 
 <style>
 #calendar {
-    background: white;
-    border-radius: 12px;
-    padding: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-.fc {
-    font-size: 14px;
+.fc { font-size: 13px; }
+
+.fc-event { border: none !important; background: transparent !important; }
+.fc-event-main { padding: 0 !important; }
+.fc-timegrid-col-events { margin: 0 2px; }
+
+.fc-scrollgrid {
+  border-radius: 10px;
+  overflow: hidden;
+  border: none !important;
 }
 
 .fc-timegrid-slot {
-    height: 40px !important;
+  height: 44px !important;
+  border-color: #f5f5f5 !important;
 }
 
-.fc-event {
-    font-size: 11px;
-    border-radius: 6px;
+.fc-timegrid-slot-label {
+  font-size: 11px;
+  color: #999;
 }
 
-@media (max-width: 768px) {
-    #calendar {
-        max-width: 100%;
-        margin: 10px;
-    }
-}
 .fc-theme-standard td,
 .fc-theme-standard th {
-    border-color: #eee;
+  border-color: #f0f0f0 !important;
+}
+
+.fc-col-header-cell {
+  background: #7847ff;
+  padding: 10px 0;
+  border: none !important;
+}
+
+.fc-col-header-cell-cushion {
+  color: white !important;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: capitalize;
+  text-decoration: none !important;
+}
+
+.evento-card {
+  background: linear-gradient(135deg, #7847ff, #5a32cc);
+  color: white;
+  border-radius: 8px;
+  padding: 6px 8px;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.1s;
+  border-left: 3px solid rgba(255,255,255,0.4) !important;
+}
+
+.evento-card:hover {
+  filter: brightness(1.1);
+  transform: scale(1.01);
+}
+
+.evento-card b {
+  font-size: 12px;
+  display: block;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.evento-card .meta {
+  opacity: 0.85;
+  font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.evento-card .badge-alumnos {
+  display: inline-block;
+  margin-top: 4px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 10px;
 }
 </style>
+
 <script>
-
-window.addEventListener('resize', function() {
-    calendar.updateSize();
-});
-
-
-
 document.addEventListener('DOMContentLoaded', function () {
+  const calendarEl = document.getElementById('calendar')
 
-    var calendarEl = document.getElementById('calendar');
-
-    fetch('/api/eventos/')
-    .then(response => response.json())
+  fetch('/api/eventos/')
+    .then(r => r.json())
     .then(data => {
 
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: window.innerWidth < 768 ? 'listWeek' : 'timeGridWeek',
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: window.innerWidth < 768 ? 'timeGridDay' : 'timeGridWeek',
+        locale: 'es',
+        slotMinTime: data.min || "08:00:00",
+        slotMaxTime: data.max || "22:00:00",
+        height: "auto",
+        slotDuration: "00:30:00",
+        slotLabelInterval: "01:00:00",
+        nowIndicator: false,
+        allDaySlot: false,
+        expandRows: true,
 
-            locale: 'es',
+        // clave para evitar superposición
+        slotEventOverlap: false,
 
-            slotMinTime: data.min || "08:00:00",
-            slotMaxTime: data.max || "22:00:00",
+        headerToolbar: false,
 
-            height: "auto",
-            contentHeight: 600,
+        buttonText: {
+        today: 'Hoy',
+        week: 'Semana',
+        day: 'Día',
+        },
 
-            initialView: window.innerWidth < 768 ? 'timeGridDay' : 'timeGridWeek',
-            slotDuration: "00:30:00",
-            slotLabelInterval: "00:30:00",
+        dayHeaderFormat: { weekday: 'long' },
 
-            nowIndicator: true,
-            expandRows: true,
-            allDaySlot: false,
+        buttonIcons: {
+        prev: 'chevron-left',
+        next: 'chevron-right',
+        },
 
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'timeGridWeek,timeGridDay'
-            },
+        hiddenDays: data.dias_ocultos,
 
-            events: data.eventos,
+        events: data.eventos,
 
-            eventContent: function(arg) {
-                return {
-                    html: `
-                        <div style="
-                        background: #0d6efd;
-                        color: white;
-                        border-radius: 6px;
-                        padding: 4px;
-                        font-size: 11px;
-                        ">
-                            <b>${arg.event.title}</b><br>
-                            ${arg.event.extendedProps.hora || ''}<br>
-                            👤 ${arg.event.extendedProps.profesor || ''}
-                        </div>
-                    `
-                };
-            }
-        });
+        eventContent: function(arg) {
+          const p = arg.event.extendedProps
+          return {
+            html: `
+              <div class="evento-card">
+                <b>${arg.event.title}</b>
+                <div class="meta">
+                  <span>🕐 ${p.hora}</span>
+                  <span>👤 ${p.profesor}</span>
+                </div>
+                <span class="badge-alumnos">👥 ${p.alumnos} alumnos</span>
+              </div>
+            `
+          }
+        },
 
-        calendar.render();
-    });
-});
+        eventClick: function(info) {
+          const slug = info.event.extendedProps.slug
+          if (slug) window.location.href = `/clases/${slug}/`
+        }
+      })
 
+      calendar.render()
 
+      window.addEventListener('resize', () => calendar.updateSize())
+    })
+})
 </script>
 
 {% endblock %}

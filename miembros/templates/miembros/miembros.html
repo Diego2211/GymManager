@@ -1,12 +1,101 @@
 {% extends "miembros/base.html" %}
 
-{% block content%}
+{% block content %}
 
-{% for miembro in miembros%}
-<h4>Alumno: {{miembro.nombre}} {{miembro.apellido}}</h4>
-<p>Inscripcion: {{miembro.fecha_alta|date:"d \\d\\e F \\d\\e Y"}}
-   dni: {{miembro.dni}}
-</p>
-{% endfor%}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2 class="mb-0">Alumnos</h2>
+  <a href="{% url 'ingreso alumnos' %}" class="btn btn-success">
+    <i class="bi bi-person-fill-add me-1"></i> Nuevo alumno
+  </a>
+</div>
 
-{% endblock%}
+<div class="row g-3">
+{% for miembro in miembros %}
+  <div class="col-sm-6 col-lg-4">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div style="
+            width:44px; height:44px; border-radius:50%;
+            background:#ede9fe; color:#7847ff;
+            display:flex; align-items:center; justify-content:center;
+            font-weight:600; font-size:16px; flex-shrink:0;
+          ">
+            {{ miembro.nombre|first|upper }}{{ miembro.apellido|first|upper }}
+          </div>
+          <div>
+            <h6 class="mb-0 fw-semibold">{{ miembro.nombre }} {{ miembro.apellido }}</h6>
+            <small class="text-muted">Alta: {{ miembro.fecha_alta|date:"d/m/Y" }}</small>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column gap-1 mb-3" style="font-size:0.875rem;">
+          <span><i class="bi bi-card-text me-2 text-muted"></i>DNI: {{ miembro.dni }}</span>
+          <span><i class="bi bi-phone me-2 text-muted"></i>{{ miembro.celular }}</span>
+        </div>
+
+        <div class="d-flex gap-2">
+          <a href="{% url 'editar_alumno' miembro.id %}" class="btn btn-sm btn-outline-warning">
+            <i class="bi bi-pencil me-1"></i>Editar
+          </a>
+          <button
+            class="btn btn-sm btn-outline-danger"
+            data-bs-toggle="modal"
+            data-bs-target="#modalEliminar"
+            data-id="{{ miembro.id }}"
+            data-nombre="{{ miembro.nombre }} {{ miembro.apellido }}"
+          >
+            <i class="bi bi-trash me-1"></i>Eliminar
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+{% empty %}
+  <p class="text-muted">No hay alumnos registrados.</p>
+{% endfor %}
+</div>
+
+
+<!-- Modal confirmación -->
+<div class="modal fade" id="modalEliminar" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header border-0">
+        <h5 class="modal-title">Eliminar alumno</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        ¿Estás seguro que querés eliminar a <strong id="nombreAlumnoModal"></strong>?
+        <p class="text-muted mt-1 mb-0" style="font-size:0.875rem;">
+          Esta acción no se puede deshacer.
+        </p>
+      </div>
+
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <form method="POST" id="formEliminar">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">
+            <i class="bi bi-trash me-1"></i>Sí, eliminar
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('modalEliminar').addEventListener('show.bs.modal', event => {
+  const btn = event.relatedTarget
+  document.getElementById('nombreAlumnoModal').textContent = btn.getAttribute('data-nombre')
+  document.getElementById('formEliminar').action = "{% url 'eliminar_alumno' 0 %}".replace('/0/', `/${btn.getAttribute('data-id')}/`)
+})
+</script>
+
+{% endblock %}
