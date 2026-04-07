@@ -1,37 +1,80 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    background-image: url('https://media.tenor.com/Qs3IUg6ycsQAAAAM/my-honest-reaction-meme.gif');
+    background-image: url(https://static01.nyt.com/images/2026/02/04/espanol/04epstein-clothes-ES-copy1/04epstein-clothes-smallSquare252.jpg?auto=webp);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* BARRA SUPERIOR */
+.topbar {
+    height: 56px;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 24px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1000;
 }
 
 /* SIDEBAR */
-
-.sidebar{
-    background-color:#7847ff;
-    height:100vh;
-    padding:20px;
+.sidebar {
+    background-color: #7847ff;
+    height: 100vh;
+    padding: 20px;
+    padding-top: 70px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 16.66%;
 }
 
-.sidebar .nav-link{
-    color:#09085e;
-    font-weight:500;
-    padding:10px;
-    border-radius:6px;
+.sidebar div,
+.sidebar a,
+.sidebar ul,
+.sidebar li {
+    background-color: transparent;
 }
-.sidebar i{
-font-size:30px;
-margin-right:10px;
-}
-
-.sidebar .nav-link:hover{
-    background-color:#a292f8;
-    color:rgb(0, 0, 0);
-    
+.sidebar {
+    padding-top: 10px;
 }
 
-/* contenido */
-
-.col-10{
-    padding:30px;
+.sidebar .nav-link {
+    color: #09085e;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 6px;
+    transition: background 0.2s;
 }
+
+.sidebar i {
+    font-size: 30px;
+    margin-right: 10px;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #a292f8;
+    color: rgb(0, 0, 0);
+}
+
+/* CONTENIDO */
+.col-10 {
+    padding: 30px;
+    padding-top: 80px;
+    margin-left: 16.66%;
+}
+
 /* PERFIL DROPDOWN */
 .perfil-btn {
     background-color: rgba(255, 255, 255, 0.12);
@@ -40,6 +83,18 @@ margin-right:10px;
     color: #fff !important;
     transition: background 0.2s;
 }
+.perfil-btn {
+    padding: 12px 20px;
+}
+
+.perfil-img {
+    width: 42px;
+    height: 42px;
+}
+
+.perfil-nombre {
+    font-size: 16px;
+}
 
 .perfil-btn:hover {
     background-color: rgba(255, 255, 255, 0.22);
@@ -47,11 +102,7 @@ margin-right:10px;
 
 .perfil-btn::after {
     margin-left: auto;
-    border-top-color: rgba(255,255,255,0.7);
-}
-.perfil-btn::after {
-    transform: rotate(-90deg);
-    transition: transform 0.2s;
+    border-top-color: rgba(255, 255, 255, 0.7);
 }
 
 .perfil-img {
@@ -89,10 +140,4 @@ margin-right:10px;
 .dropdown-menu-dark .dropdown-divider {
     border-color: rgba(255,255,255,0.15);
     margin: 4px 0;
-}
-.sidebar .dropdown-menu {
-    left: 100% !important;
-    top: 0 !important;
-    margin-left: 8px !important;
-    transform: none !important;
 }
