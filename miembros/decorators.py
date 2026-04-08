@@ -64,8 +64,8 @@ def requiere_roles(*roles_permitidos):
             if not membership:
                 return redirect("crear gimnasio")
             
-            request.membership = membership
             request.gym = membership.gym
+            request.nombre = str(perfil.nombre)
 
             # 🔴 No tiene rol permitido
             if membership.rol not in roles_permitidos:
