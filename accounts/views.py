@@ -8,7 +8,7 @@ from django.http import HttpResponseForbidden
 from django.utils import timezone
 from datetime import timedelta
 from miembros.permissions import es_admin, es_profesor
-
+from miembros.decorators import requiere_roles
 
 
 def registro(request):
@@ -82,6 +82,13 @@ def crear_gimnasio(request):
     return render(request, "accounts/crear_gym.html",{
         "form": form
     })
+@login_required
+def elegir(request):
+    """
+    Pantalla intermedia: el usuario elige entre
+    unirse con código o crear su propio gimnasio.
+    """
+    return render(request, 'accounts/unirse_crear.html')
 
 
 @login_required
@@ -117,22 +124,19 @@ def cerrar_sesion(request):
     logout(request)
     return redirect("login")
 
+
+
 @login_required
+@requiere_roles("owner", "admin")
 def crear_invitacion(request):
+    gym = request.gym
+    membership = request.membership
 
-    gym = request.user.perfil.gym_activo
-
-    membership = Membership.objects.filter(usuario=request.user,
-                                           gym=gym,
-                                           activo=True).first()
     if not es_admin(membership):
         return HttpResponseForbidden("No tenés permisos para crear invitaciones")
-    
 
     if request.method == 'POST':
-
         form = invitacion_form(request.POST)
-
         if form.is_valid():
             invitacion = form.save(commit=False)
             expira = form.cleaned_data["expiracion"]
@@ -144,19 +148,22 @@ def crear_invitacion(request):
             elif expira == "7d":
                 invitacion.expira_en = timezone.now() + timedelta(days=7)
 
-            invitacion.gym = request.user.perfil.gym_activo
+            invitacion.gym = gym
             invitacion.creado_por = request.user
-
             invitacion.save()
 
-            return redirect("ver invitaciones")
-    
-
+            # Guardás el código en la sesión y redirigís
+            request.session['codigo_generado'] = str(invitacion.codigo)
+            return redirect('crear invitacion')
     else:
         form = invitacion_form()
 
-    return render(request, "accounts/crear_invitacion.html",{
-        "form":form
+    # Leés y limpiás el código de la sesión
+    codigo_generado = request.session.pop('codigo_generado', None)
+
+    return render(request, "accounts/crear_invitacion.html", {
+        "form": form,
+        "codigo_generado": codigo_generado,
     })
 
 @login_required

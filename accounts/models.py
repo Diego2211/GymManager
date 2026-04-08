@@ -113,7 +113,7 @@ class User(AbstractUser):
 
 class Invitacion(BaseModel):
     ROLES = [
-            ("Admin_Gym", "Administrador"),
+            ("admin", "Administrador"),
             ("profesor", "Profesor"),
     ]
 

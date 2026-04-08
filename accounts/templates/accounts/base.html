@@ -1,19 +1,124 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'accounts/css/index.css' %}">
-    <script src="{% static 'accounts.js.index.js' %}"></script>
-
-    <title>Gym Manager</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% load static %}
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'accounts/css/index.css' %}">
+  <title>{% block title %}Gym Manager{% endblock %}</title>
 </head>
 <body>
-    {% block content %}
 
-    {% endblock %}
+<style>
+  :root {
+    --blue: #2596be;
+    --blue-light: #5bb8d4;
+    --blue-xlight: #d0eef7;
+    --blue-dark: #1a7a9e;
+    --white: #ffffff;
+    --off-white: #f4fafd;
+    --text-dark: #0d2030;
+    --text-mid: #3a6070;
+    --text-soft: #7eafc0;
+  }
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: Arial, sans-serif;
+    background: var(--blue);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Círculos decorativos de fondo */
+  body::before {
+    content: '';
+    position: fixed;
+    width: 500px; height: 500px; border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    top: -180px; left: -140px;
+    pointer-events: none; z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    width: 360px; height: 360px; border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+    bottom: -100px; right: -80px;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* Nav */
+  .top-nav {
+    position: relative; z-index: 10;
+    padding: 24px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .logo {
+    font-size: 1.5rem; font-weight: 800;
+    color: var(--white);
+    letter-spacing: -0.4px;
+    text-decoration: none;
+  }
+  .logo span { color: rgba(255,255,255,0.45); }
+
+  .back-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.85rem; font-weight: 400;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--white); }
+  .back-link svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+  /* Contenido principal */
+  .page {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 20px 40px;
+    position: relative; z-index: 1;
+  }
+
+  /* Footer */
+  .mini-footer {
+    position: relative; z-index: 1;
+    text-align: center;
+    padding: 20px;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.45);
+  }
+
+  @media (max-width: 520px) {
+    .top-nav { padding: 20px 24px; }
+  }
+</style>
+
+<nav class="top-nav">
+  <a href="{% url 'landing page' %}" class="logo">Gym<span>Manager</span></a>
+
+</nav>
+
+<div class="page">
+  {% block content %}
+  
+  {% endblock %}
+</div>
+
+<div class="mini-footer">
+  © 2026 GymManager — Todos los derechos reservados.
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_js %}{% endblock %}
 </body>
+</html>

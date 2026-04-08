@@ -19,10 +19,7 @@ from decimal import Decimal
 @login_required
 @requiere_roles("owner", "admin", "profesor")
 def index(request):
-    nombre = str(request.user.perfil.nombre)
-    return render(request, "miembros/base.html",{
-        "nombre": nombre
-    })
+    return render(request, "miembros/index.html")
 
 
 @login_required

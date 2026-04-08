@@ -1,37 +1,243 @@
 {% extends "accounts/base.html" %}
+{% load static %}
+
+{% block title %}Registrarse — Gym Manager{% endblock %}
 
 {% block content %}
 
-<h2>Registrarse</h2>
+<style>
+  /* Card */
+  .login-box {
+    background: var(--white);
+    border-radius: 6px;
+    padding: 52px 48px;
+    width: 100%; max-width: 440px;
+    box-shadow: 0 24px 64px rgba(13,32,48,0.22), 0 4px 16px rgba(13,32,48,0.1);
+    animation: fadeUp 0.5s ease both;
+  }
 
-<div class="container mt-5">
+  .card-logo {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.3rem; font-weight: 800;
+    color: var(--blue);
+    letter-spacing: -0.3px;
+    display: block;
+    margin-bottom: 32px;
+    text-decoration: none;
+  }
+  .card-logo span { color: var(--text-soft); }
 
-<div class="row justify-content-center">
+  .login-box h1 {
+    font-size: 1.85rem; font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    letter-spacing: -0.2px;
+  }
 
-<div class="col-md-6">
+  .subtitle {
+    color: var(--text-mid);
+    font-size: 0.93rem;
+    margin-bottom: 36px;
+    line-height: 1.6;
+  }
 
-<div class="card shadow">
+  /* Campos del form Django */
+  .login-box p { margin-bottom: 22px; }
 
-<div class="card-header">
-<h4 class="text-center">Crear cuenta</h4>
-</div>
+  label {
+    display: block;
+    font-size: 0.78rem; font-weight: 500;
+    color: var(--text-mid);
+    margin-bottom: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
 
-<div class="card-body">
+  input[type="email"],
+  input[type="password"],
+  input[type="text"] {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1.5px solid var(--blue-xlight);
+    border-radius: 12px;
+    background: var(--off-white);
+    font-size: 0.97rem;
+    color: var(--text-dark);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  }
 
-<form method="POST" class="mt-4">
+  input:focus {
+    border-color: var(--blue);
+    background: var(--white);
+    box-shadow: 0 0 0 4px rgba(37,150,190,0.1);
+  }
+
+  input::placeholder { color: var(--text-soft); font-weight: 300; }
+
+  /* Password wrapper con ojo */
+  .password-wrapper {
+    position: relative;
+  }
+  .password-wrapper input {
+    padding-right: 48px;
+  }
+  .toggle-pass {
+    position: absolute;
+    right: 14px; top: 50%;
+    transform: translateY(-50%);
+    background: none; border: none; cursor: pointer;
+    padding: 0; display: flex; align-items: center;
+    color: var(--text-soft);
+    transition: color 0.2s;
+  }
+  .toggle-pass:hover { color: var(--blue); }
+  .toggle-pass svg {
+    width: 18px; height: 18px;
+    fill: none; stroke: currentColor;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  /* Errores Django */
+  .login-box ul.errorlist {
+    list-style: none;
+    padding: 0; margin: 6px 0 0;
+    font-size: 0.78rem;
+    color: #d94f4f;
+  }
+
+  .form-errors {
+    background: #fff0f0;
+    border: 1px solid #ffc0c0;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.85rem;
+    color: #d94f4f;
+  }
+
+  /* Botón */
+  .btn-submit {
+    width: 100%;
+    background: var(--blue);
+    color: var(--white);
+    font-weight: 700; font-size: 1rem;
+    padding: 15px;
+    border-radius: 999px;
+    border: none; cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.22s, transform 0.18s, box-shadow 0.22s;
+    box-shadow: 0 4px 20px rgba(37,150,190,0.35);
+    letter-spacing: 0.01em;
+    font-family: inherit;
+  }
+  .btn-submit:hover {
+    background: var(--blue-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(37,150,190,0.45);
+  }
+  .btn-submit:active { transform: translateY(0); }
+
+  /* Divider */
+  .divider {
+    display: flex; align-items: center; gap: 14px;
+    margin: 28px 0;
+    color: var(--text-soft);
+    font-size: 0.82rem;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1; height: 1px;
+    background: var(--blue-xlight);
+  }
+
+  /* Link login */
+  .register-link {
+    text-align: center;
+    font-size: 0.88rem;
+    color: var(--text-mid);
+    font-weight: 300;
+  }
+  .register-link a {
+    color: var(--blue); font-weight: 500; text-decoration: none;
+  }
+  .register-link a:hover { text-decoration: underline; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 520px) {
+    .login-box { padding: 40px 28px; border-radius: 18px; }
+  }
+</style>
+
+<div class="login-box">
+
+  <a href="{% url 'landing page' %}" class="card-logo">Gym<span>Manager</span></a>
+
+  <h1>Crear cuenta</h1>
+  <p class="subtitle">Completá los datos para registrarte en GymManager.</p>
+
+  {% if form.non_field_errors %}
+    <div class="form-errors">
+      {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+    </div>
+  {% endif %}
+
+  <form method="POST">
     {% csrf_token %}
-    {{ form.as_p }}
 
-    <button type="submit" class="btn btn-primary">Registrarse</button>
-</form>
+    {% for field in form %}
+      <div style="margin-bottom: 22px;">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+
+        {% if field.field.widget.input_type == 'password' %}
+          <div class="password-wrapper">
+            {{ field }}
+            <button class="toggle-pass" type="button"
+                    onclick="togglePass('{{ field.id_for_label }}', 'eye_{{ field.html_name }}')"
+                    aria-label="Mostrar contraseña">
+              <svg id="eye_{{ field.html_name }}" viewBox="0 0 24 24">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        {% else %}
+          {{ field }}
+        {% endif %}
+
+        {% if field.errors %}
+          <ul class="errorlist">
+            {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <button type="submit" class="btn-submit">Registrarse</button>
+  </form>
+
+  <div class="divider">o</div>
+
+  <p class="register-link">¿Ya tenés cuenta? <a href="{% url 'login' %}">Iniciá sesión</a></p>
+
 </div>
 
-</div>
+{% endblock %}
 
-</div>
 
-</div>
-
-</div>
-
+{% block extra_js %}
+<script>
+  function togglePass(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon  = document.getElementById(iconId);
+    const hide  = input.type === 'password';
+    input.type  = hide ? 'text' : 'password';
+    icon.innerHTML = hide
+      ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>'
+      : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  }
+</script>
 {% endblock %}

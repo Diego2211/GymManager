@@ -21,7 +21,7 @@
             <img src="{% static 'miembros/img/perfil.png' %}"
                  width="32" height="32"
                  class="perfil-img">
-            <span class="perfil-nombre">{{nombre}}</span>
+            <span class="perfil-nombre">{{nombre_usuario}}</span>
         </a>
 
         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
@@ -50,19 +50,19 @@
             <ul class="nav flex-column pt-3">
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/miembros/"><i class="bi bi-people-fill"></i> Miembros</a>
+                    <a class="nav-link" href="{% url 'miembros' %}"><i class="bi bi-people-fill"></i> Miembros</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/profesores/"><i class="bi bi-person-lines-fill"></i> Profesores</a>
+                    <a class="nav-link" href="{% url 'profesores' %}"><i class="bi bi-person-lines-fill"></i> Profesores</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/clases/"><i class="bi bi-person-arms-up"></i> Clases</a>
+                    <a class="nav-link" href="{% url 'clases' %}"><i class="bi bi-person-arms-up"></i> Clases</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/inscribir-alumno/"><i class="bi bi-person-fill-add"></i> Inscribir alumno</a>
+                    <a class="nav-link" href="{% url 'inscripcion' %}"><i class="bi bi-person-fill-add"></i> Inscribir alumno</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/crear-clase/"><i class="bi bi-plus-circle"></i></i>Crear clase</a>
+                    <a class="nav-link" href="{% url 'crear clase' %}"><i class="bi bi-plus-circle"></i></i>Crear clase</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'crear invitacion' %}"><i class="bi bi-plus-circle"></i> Crear invitación</a>

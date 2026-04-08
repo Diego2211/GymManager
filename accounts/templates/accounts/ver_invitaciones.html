@@ -2,63 +2,272 @@
 
 {% block content %}
 
-<h1>Invitaciones</h1>
-{% for i in invitaciones %}
-<div class="card mb-3 p-3">
+<style>
+  .inv-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.75rem;
+  }
 
-    <div class="d-flex justify-content-between">
-        <h5 id="codigo-{{ i.id }}">{{ i.codigo }}</h5>
-        <button 
-        class="btn btn-sm btn-outline-secondary"
-        onclick="copiarCodigo('{{ i.codigo }}', this)">
-        Copiar
+  .inv-header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #09085e;
+    margin: 0;
+  }
+
+  .inv-count {
+    background: #7847ff;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .inv-card {
+    background: #fff;
+    border: 1px solid rgba(120, 71, 255, 0.12);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 12px rgba(120, 71, 255, 0.06);
+    transition: box-shadow 0.2s;
+  }
+
+  .inv-card:hover {
+    box-shadow: 0 4px 20px rgba(120, 71, 255, 0.12);
+  }
+
+  .inv-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .inv-codigo {
+    font-family: 'Courier New', monospace;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #7847ff;
+    letter-spacing: 2px;
+    background: #f3f0ff;
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 1px dashed #a292f8;
+  }
+
+  .inv-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-copiar-inv {
+    background: transparent;
+    border: 1.5px solid #e0d9ff;
+    color: #7847ff;
+    border-radius: 7px;
+    padding: 5px 14px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: inherit;
+  }
+
+  .btn-copiar-inv:hover {
+    background: #f3f0ff;
+    border-color: #a292f8;
+  }
+
+  .btn-copiar-inv.copiado {
+    background: #d1fae5;
+    border-color: #6ee7b7;
+    color: #065f46;
+  }
+
+  .badge-estado {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  .badge-activa    { background: #d1fae5; color: #065f46; }
+  .badge-sin_usos  { background: #fef3c7; color: #92400e; }
+  .badge-expirada  { background: #fee2e2; color: #991b1b; }
+  .badge-inactiva  { background: #f1f5f9; color: #475569; }
+
+  .inv-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.5rem 1.5rem;
+  }
+
+  .inv-meta-item {
+    font-size: 0.85rem;
+    color: #555;
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+  }
+
+  .inv-meta-item strong {
+    color: #09085e;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .usos-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .usos-bar {
+    flex: 1;
+    max-width: 80px;
+    height: 5px;
+    background: #e0d9ff;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .usos-bar-fill {
+    height: 100%;
+    background: #7847ff;
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #aaa;
+  }
+
+  .empty-state i {
+    font-size: 2.5rem;
+    color: #d0c8ff;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  .empty-state p {
+    font-size: 0.95rem;
+    margin: 0;
+  }
+</style>
+
+<div class="inv-header">
+  <h1>Invitaciones</h1>
+  <span class="inv-count">{{ invitaciones|length }}</span>
+</div>
+
+{% if invitaciones %}
+  {% for i in invitaciones %}
+  <div class="inv-card">
+
+    <div class="inv-card-top">
+      <span class="inv-codigo">{{ i.codigo }}</span>
+
+      <div class="inv-card-actions">
+        <button class="btn-copiar-inv" onclick="copiarCodigo('{{ i.codigo }}', this)">
+          <i class="bi bi-clipboard"></i>
+          Copiar
         </button>
 
         {% if i.estado == "activa" %}
-            <span class="badge bg-success">Activa</span>
+          <span class="badge-estado badge-activa">Activa</span>
         {% elif i.estado == "sin_usos" %}
-            <span class="badge bg-warning text-dark">Sin usos</span>
+          <span class="badge-estado badge-sin_usos">Sin usos</span>
         {% elif i.estado == "expirada" %}
-            <span class="badge bg-danger">Expirada</span>
+          <span class="badge-estado badge-expirada">Expirada</span>
         {% else %}
-            <span class="badge bg-secondary">Inactiva</span>
+          <span class="badge-estado badge-inactiva">Inactiva</span>
         {% endif %}
+      </div>
     </div>
 
-    <p class="mb-1">
-        <strong>Rol:</strong> {{ i.rol }}
-    </p>
+    <div class="inv-meta">
 
-    <p class="mb-1">
-        <strong>Usos:</strong> {{ i.usos_actuales }}/{{ i.usos_maximos }}
-    </p>
+      <div class="inv-meta-item">
+        <strong>Rol:</strong>
+        <span>{{ i.rol }}</span>
+      </div>
 
-    <p class="mb-1">
-        <strong>creado por:</strong> {{ i.creado_por.perfil.nombre }} {{ i.creado_por.perfil.apellido }}
-    </p>
+      <div class="inv-meta-item">
+        <strong>Usos:</strong>
+        <div class="usos-bar-wrap">
+          <span>{{ i.usos_actuales }}/{{ i.usos_maximos }}</span>
+          <div class="usos-bar">
+            <div class="usos-bar-fill" style="width: {% if i.usos_maximos > 0 %}{% widthratio i.usos_actuales i.usos_maximos 100 %}{% else %}0{% endif %}%"> </div>
+          </div>
+        </div>
+      </div>
 
-    <p class="mb-1">
-        <strong>Usado por:</strong> 
-        {% for m in membership %} 
+      <div class="inv-meta-item">
+        <strong>Creado por:</strong>
+        <span>{{ i.creado_por.perfil.nombre }} {{ i.creado_por.perfil.apellido }}</span>
+      </div>
 
-        {% if i.codigo == m.invitacion.codigo %} 
+      <div class="inv-meta-item">
+        <strong>Usado por:</strong>
+        <span>
+          {% for m in membership %}
+            {% if i.codigo == m.invitacion.codigo %}
+              {{ m.usuario.perfil.nombre }} {{ m.usuario.perfil.apellido }},
+            {% endif %}
+          {% endfor %}
+        </span>
+      </div>
 
-        {{ m.usuario.perfil.nombre }} {{ m.usuario.perfil.apellido }},
-
-        {% endif %} 
-        
-        {% endfor %} 
-    </p>
-
-    <p class="mb-0">
+      <div class="inv-meta-item">
         <strong>Expira:</strong>
-        {% if i.expira_en %}
+        <span>
+          {% if i.expira_en %}
             {{ i.expira_en|date:"d/m/Y H:i" }}
-        {% else %}
+          {% else %}
             Sin límite
-        {% endif %}
-    </p>
+          {% endif %}
+        </span>
+      </div>
 
-</div>
-{% endfor %}
+    </div>
+
+  </div>
+  {% endfor %}
+
+{% else %}
+  <div class="empty-state">
+    <i class="bi bi-envelope-slash"></i>
+    <p>No hay invitaciones creadas todavía.</p>
+  </div>
+{% endif %}
+
+<script>
+  function copiarCodigo(codigo, btn) {
+    navigator.clipboard.writeText(codigo).then(() => {
+      const icono = btn.querySelector('i');
+      const original = btn.innerHTML;
+
+      btn.classList.add('copiado');
+      btn.innerHTML = '<i class="bi bi-clipboard-check"></i> ¡Copiado!';
+
+      setTimeout(() => {
+        btn.classList.remove('copiado');
+        btn.innerHTML = original;
+      }, 2000);
+    });
+  }
+</script>
+
 {% endblock %}

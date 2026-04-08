@@ -2,34 +2,339 @@
 
 {% block content %}
 
-<div class="container mt-5">
+<style>
+  .inv-wrap {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-<div class="row justify-content-center">
+  .inv-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 2rem 2.25rem;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 4px 24px rgba(120, 71, 255, 0.10);
+    border: 1px solid rgba(120, 71, 255, 0.12);
+  }
 
-<div class="col-md-6">
+  .inv-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.75rem;
+  }
 
-<div class="card shadow">
+  .inv-icon {
+    width: 44px;
+    height: 44px;
+    background: #7847ff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
 
-<div class="card-header">
-<h4 class="text-center">Crear invitacion</h4>
+  .inv-icon i {
+    font-size: 1.2rem;
+    color: #fff;
+    margin: 0;
+  }
+
+  .inv-card-header h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #09085e;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .inv-card-header p {
+    font-size: 0.8rem;
+    color: #888;
+    margin: 0;
+  }
+
+  .inv-field {
+    margin-bottom: 1.1rem;
+  }
+
+  .inv-field label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #09085e;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.4rem;
+  }
+
+  .inv-field select,
+  .inv-field input[type="number"] {
+    width: 100%;
+    padding: 0.65rem 0.9rem;
+    border: 1.5px solid #e0d9ff;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    color: #09085e;
+    background: #faf9ff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+  }
+
+  .inv-field select:focus,
+  .inv-field input[type="number"]:focus {
+    border-color: #7847ff;
+    box-shadow: 0 0 0 3px rgba(120, 71, 255, 0.12);
+    background: #fff;
+  }
+
+  .inv-field .errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 0.3rem 0 0;
+    font-size: 0.78rem;
+    color: #dc3545;
+  }
+
+  .btn-generar {
+    width: 100%;
+    padding: 0.75rem;
+    background: #7847ff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-generar:hover { background: #6535ee; }
+  .btn-generar:active { transform: scale(0.99); }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(9, 8, 94, 0.4);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.active {
+    display: flex;
+    animation: fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .modal-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 380px;
+    text-align: center;
+    animation: slideUp 0.25s ease;
+    box-shadow: 0 12px 48px rgba(120, 71, 255, 0.2);
+    border: 1px solid rgba(120, 71, 255, 0.15);
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(16px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  .modal-check {
+    width: 52px;
+    height: 52px;
+    background: #7847ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+  }
+
+  .modal-check i {
+    font-size: 1.3rem;
+    color: #fff;
+    margin: 0;
+  }
+
+  .modal-box h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #09085e;
+    margin-bottom: 0.3rem;
+  }
+
+  .modal-box p.modal-sub {
+    font-size: 0.82rem;
+    color: #999;
+    margin-bottom: 1.25rem;
+  }
+
+  .codigo-display {
+    background: #f3f0ff;
+    border: 1.5px dashed #a292f8;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .codigo-display span {
+    font-family: 'Courier New', monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #7847ff;
+    letter-spacing: 3px;
+    word-break: break-all;
+  }
+
+  .btn-copiar {
+    width: 100%;
+    padding: 0.7rem;
+    background: #7847ff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: inherit;
+  }
+
+  .btn-copiar:hover { background: #6535ee; }
+  .btn-copiar.copiado { background: #198754; }
+
+  .btn-cerrar-modal {
+    width: 100%;
+    padding: 0.65rem;
+    background: transparent;
+    color: #888;
+    border: 1.5px solid #e0d9ff;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .btn-cerrar-modal:hover {
+    border-color: #a292f8;
+    color: #7847ff;
+  }
+</style>
+
+<div class="inv-wrap">
+  <div class="inv-card">
+
+    <div class="inv-card-header">
+      <div class="inv-icon">
+        <i class="bi bi-envelope-plus"></i>
+      </div>
+      <div>
+        <h2>Nueva invitación</h2>
+        <p>El código se compartirá con el profesor</p>
+      </div>
+    </div>
+
+    <form method="post" id="inv-form">
+      {% csrf_token %}
+
+      {% for field in form %}
+        <div class="inv-field">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <ul class="errorlist">
+              {% for error in field.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <button type="submit" class="btn-generar">
+        <i class="bi bi-plus-circle"></i>
+        Generar invitación
+      </button>
+    </form>
+
+  </div>
 </div>
 
-<div class="card-body">
+{% if codigo_generado %}
+<div class="modal-overlay active" id="modal-codigo">
+  <div class="modal-box">
 
-<form method="post" class="mt-4">
-    {% csrf_token %}
-    {{ form.as_p }}
+    <div class="modal-check">
+      <i class="bi bi-check-lg"></i>
+    </div>
 
-    <button type="submit" class="btn btn-primary">Guardar</button>
-</form>
+    <h3>¡Invitación creada!</h3>
+    <p class="modal-sub">Compartí este código con el profesor para que pueda unirse al gimnasio.</p>
+
+    <div class="codigo-display">
+      <span id="codigo-texto">{{ codigo_generado }}</span>
+    </div>
+
+    <button class="btn-copiar" id="btn-copiar" onclick="copiarCodigoInvitacion()">
+      <i class="bi bi-clipboard" id="icono-copiar"></i>
+      <span id="texto-copiar">Copiar código</span>
+    </button>
+
+    <button class="btn-cerrar-modal" onclick="document.getElementById('modal-codigo').style.display='none'">
+    Listo
+    </button>
+
+
+  </div>
 </div>
+{% endif %}
+<script>
+function copiarCodigoInvitacion() {
+    const codigo = document.getElementById('codigo-texto').textContent.trim();
+    navigator.clipboard.writeText(codigo).then(() => {
+      const btn = document.getElementById('btn-copiar');
+      const icono = document.getElementById('icono-copiar');
+      const texto = document.getElementById('texto-copiar');
 
-</div>
+      btn.classList.add('copiado');
+      icono.className = 'bi bi-clipboard-check';
+      texto.textContent = '¡Copiado!';
 
-</div>
-
-</div>
-
-</div>
+      setTimeout(() => {
+        btn.classList.remove('copiado');
+        icono.className = 'bi bi-clipboard';
+        texto.textContent = 'Copiar código';
+      }, 2000);
+    });
+}
+</script>
 
 {% endblock %}
+
