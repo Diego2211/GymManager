@@ -57,7 +57,7 @@ body {
 }
 
 .sidebar .nav-link:hover {
-    background-color: #a292f8;
+    background-color: #1a6e8a;
     color: rgb(0, 0, 0);
 }
 
@@ -101,7 +101,7 @@ body {
 }
 
 .dropdown-menu-dark {
-    background-color: #3a20a8;
+    background-color: #1a8a9e;
     border: 1px solid rgba(255,255,255,0.15);
     border-radius: 10px;
     padding: 6px;
@@ -111,7 +111,7 @@ body {
     border-radius: 6px;
     font-size: 14px;
     padding: 8px 12px;
-    color: rgba(255,255,255,0.85);
+    color: rgba(255,255,255,0.9);
     transition: background 0.15s;
 }
 
@@ -124,7 +124,6 @@ body {
     border-color: rgba(255,255,255,0.15);
     margin: 4px 0;
 }
-
 /* ===== RESPONSIVE SIDEBAR ===== */
 
 @media (max-width: 992px) {
