@@ -82,6 +82,13 @@ def crear_gimnasio(request):
     return render(request, "accounts/crear_gym.html",{
         "form": form
     })
+@login_required
+def elegir(request):
+    """
+    Pantalla intermedia: el usuario elige entre
+    unirse con código o crear su propio gimnasio.
+    """
+    return render(request, 'accounts/unirse_crear.html')
 
 
 @login_required

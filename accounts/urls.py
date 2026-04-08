@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import iniciar_sesion, registro, crear_gimnasio, editar_perfil, ver_perfil, cerrar_sesion, crear_invitacion, ver_invitaciones, seleccionar_gym, aceptar_invitacion
+from .views import iniciar_sesion, registro, crear_gimnasio, editar_perfil, ver_perfil, cerrar_sesion, crear_invitacion, ver_invitaciones, seleccionar_gym, aceptar_invitacion, elegir
 
 urlpatterns = [
     path("iniciar-sesion/", iniciar_sesion, name="login"),
@@ -11,6 +11,7 @@ urlpatterns = [
     path("crear-invitacion/", crear_invitacion, name="crear invitacion"),
     path("ver-invitaciones/", ver_invitaciones, name="ver invitaciones"),
     path("elegir-gym/", seleccionar_gym, name="elegir gym"),
-    path("aceptar-invitacion/", aceptar_invitacion, name="aceptar invitacion")
+    path("aceptar-invitacion/", aceptar_invitacion, name="aceptar invitacion"),
+    path("unirse/", elegir, name="unirse_crear")
 
 ]

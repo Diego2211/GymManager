@@ -35,8 +35,8 @@ class perfil_form(BaseForm):
 
 class registro_form(BaseForm):
 
-    password = forms.CharField(widget=forms.PasswordInput)
-    password_confirm = forms.CharField(widget=forms.PasswordInput)
+    password = forms.CharField(widget=forms.PasswordInput, label="contraseña")
+    password_confirm = forms.CharField(widget=forms.PasswordInput, label="confirmar contraseña")
 
     class Meta:
         model = User

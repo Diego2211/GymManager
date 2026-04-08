@@ -1,0 +1,141 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+{% block title %}Comenzar — GymManager{% endblock %}
+
+{% block content %}
+
+<style>
+  .login-box {
+    background: var(--white);
+    border-radius: 6px;
+    padding: 52px 48px;
+    width: 100%;
+    max-width: 460px;
+    box-shadow: 0 24px 64px rgba(13,32,48,0.22), 0 4px 16px rgba(13,32,48,0.1);
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .card-logo {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.3rem; font-weight: 800;
+    color: var(--blue);
+    letter-spacing: -0.3px;
+    display: block;
+    margin-bottom: 32px;
+    text-decoration: none;
+  }
+  .card-logo span { color: var(--text-soft); }
+
+  .login-box h1 {
+    font-size: 1.85rem; font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    letter-spacing: -0.2px;
+  }
+
+  .subtitle {
+    color: var(--text-mid);
+    font-size: 0.93rem;
+    margin-bottom: 36px;
+    line-height: 1.6;
+  }
+
+  .option-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 20px 22px;
+    border: 1.5px solid var(--blue-xlight);
+    border-radius: 14px;
+    background: var(--off-white);
+    text-decoration: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    margin-bottom: 16px;
+  }
+  .option-card:hover {
+    border-color: var(--blue);
+    background: var(--white);
+    box-shadow: 0 0 0 4px rgba(37,150,190,0.08);
+  }
+
+  .option-icon {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    background: var(--blue-xlight);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .option-icon svg {
+    width: 22px; height: 22px;
+    stroke: var(--blue); fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .option-text strong {
+    display: block;
+    font-size: 0.97rem; font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 3px;
+  }
+  .option-text span {
+    font-size: 0.82rem;
+    color: var(--text-soft);
+  }
+
+  .option-arrow {
+    margin-left: auto;
+    color: var(--text-soft);
+  }
+  .option-arrow svg {
+    width: 16px; height: 16px;
+    stroke: currentColor; fill: none;
+    stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 520px) {
+    .login-box { padding: 40px 28px; border-radius: 18px; }
+  }
+</style>
+
+<div class="login-box">
+
+  <a href="{% url 'landing page' %}" class="card-logo">Gym<span>Manager</span></a>
+
+  <h1>¿Cómo querés continuar?</h1>
+  <p class="subtitle">Elegí una opción para empezar a usar GymManager.</p>
+
+  <a href="{% url 'aceptar invitacion' %}" class="option-card">
+    <div class="option-icon">
+      <svg viewBox="0 0 24 24"><path d="M15 7h3a5 5 0 0 1 0 10h-3m-6 0H6A5 5 0 0 1 6 7h3"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+    </div>
+    <div class="option-text">
+      <strong>Unirse con código</strong>
+      <span>Tengo un código de invitación</span>
+    </div>
+    <div class="option-arrow">
+      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+  </a>
+
+  <a href="{% url 'crear gimnasio' %}" class="option-card">
+    <div class="option-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+    </div>
+    <div class="option-text">
+      <strong>Crear un gimnasio</strong>
+      <span>Quiero registrar mi propio gimnasio</span>
+    </div>
+    <div class="option-arrow">
+      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+  </a>
+
+</div>
+
+{% endblock %}

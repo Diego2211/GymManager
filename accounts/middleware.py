@@ -22,7 +22,8 @@ class OnboardingMiddleware:
                 reverse("aceptar invitacion"),
                 reverse("elegir gym"),
                 reverse("cerrar sesion"),
-                reverse("landing page")
+                reverse("landing page"),
+                reverse("unirse_crear")
             ]
 
             if any(request.path.startswith(ruta) for ruta in rutas_permitidas):
