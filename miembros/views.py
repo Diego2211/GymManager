@@ -34,6 +34,26 @@ def profesores(request):
     })
 
 
+
+@login_required
+@requiere_roles("owner", "admin")
+def expulsar_profesor(request, membership_id):
+    if request.method == "POST":
+        gym = request.user.perfil.gym_activo
+        membership = Membership.objects.filter(
+            id=membership_id,
+            gym=gym
+        ).first()
+
+        if not membership:
+            return HttpResponseForbidden("No tenés permisos")
+
+        membership.delete()
+        return redirect("profesores")
+
+    return redirect("profesores")
+
+
 @login_required
 @requiere_roles("owner", "admin")
 def miembros(request):

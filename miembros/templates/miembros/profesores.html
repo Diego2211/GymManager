@@ -1,11 +1,357 @@
 {% extends "miembros/base.html" %}
 
 {% block content %}
-{% for p in profesores %}
-<h4>{{p.rol}}: {{p.usuario.perfil.nombre}} {{p.usuario.perfil.apellido}}</h4>
-<p>Inscripcion: {{p.fecha_union|date:"d \\d\\e F \\d\\e Y"}}
-   dni: {{p.usuario.perfil.dni}}
-</p>
-{% endfor %}
+
+<style>
+  :root {
+    --blue: #2596be;
+    --blue-light: #5bb8d4;
+    --blue-xlight: #d0eef7;
+    --blue-dark: #1a7a9e;
+    --white: #ffffff;
+    --off-white: #f4fafd;
+    --text-dark: #0d2030;
+    --text-mid: #3a6070;
+    --text-soft: #7eafc0;
+  }
+
+  .prof-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.75rem;
+  }
+
+  .prof-header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0;
+    letter-spacing: -0.3px;
+  }
+
+  .prof-count {
+    background: var(--blue);
+    color: var(--white);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .prof-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .prof-card {
+    background: var(--white);
+    border: 1.5px solid var(--blue-xlight);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 12px rgba(37, 150, 190, 0.06);
+    transition: box-shadow 0.2s, transform 0.2s;
+    animation: fadeUp 0.35s ease both;
+  }
+
+  .prof-card:hover {
+    box-shadow: 0 6px 24px rgba(37, 150, 190, 0.13);
+    transform: translateY(-2px);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .prof-card-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1rem;
+  }
+
+  .prof-avatar {
+    width: 48px;
+    height: 48px;
+    background: var(--blue-xlight);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--blue-dark);
+    flex-shrink: 0;
+  }
+
+  .prof-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 3px;
+  }
+
+  .prof-rol {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: var(--blue-xlight);
+    color: var(--blue-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .prof-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 1.25rem;
+  }
+
+  .prof-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-mid);
+  }
+
+  .prof-meta-item i {
+    color: var(--blue-light);
+    font-size: 0.95rem;
+    width: 16px;
+    text-align: center;
+  }
+
+  .btn-expulsar {
+    width: 100%;
+    padding: 0.65rem;
+    background: transparent;
+    color: #c0392b;
+    border: 1.5px solid #fcc;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: inherit;
+  }
+
+  .btn-expulsar:hover {
+    background: #fff0f0;
+    border-color: #e74c3c;
+  }
+
+  /* ── Modal ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(13, 32, 48, 0.45);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.active {
+    display: flex;
+    animation: fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .modal-box {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 380px;
+    text-align: center;
+    animation: slideUp 0.25s ease;
+    box-shadow: 0 12px 48px rgba(13, 32, 48, 0.18);
+    border: 1px solid var(--blue-xlight);
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(16px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  .modal-warn-icon {
+    width: 52px;
+    height: 52px;
+    background: #fff0f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.4rem;
+    color: #e74c3c;
+  }
+
+  .modal-box h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.4rem;
+  }
+
+  .modal-box p {
+    font-size: 0.85rem;
+    color: var(--text-soft);
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-box p strong {
+    color: var(--text-dark);
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn-cancelar {
+    flex: 1;
+    padding: 0.7rem;
+    background: transparent;
+    color: var(--text-mid);
+    border: 1.5px solid var(--blue-xlight);
+    border-radius: 8px;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .btn-cancelar:hover {
+    border-color: var(--blue-light);
+    color: var(--blue);
+  }
+
+  .btn-confirmar {
+    flex: 1;
+    padding: 0.7rem;
+    background: #e74c3c;
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: inherit;
+  }
+
+  .btn-confirmar:hover { background: #c0392b; }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-soft);
+  }
+
+  .empty-state i {
+    font-size: 2.5rem;
+    color: var(--blue-xlight);
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+</style>
+
+<div class="prof-header">
+  <h1>Profesores</h1>
+  <span class="prof-count">{{ profesores|length }}</span>
+</div>
+
+{% if profesores %}
+  <div class="prof-grid">
+    {% for p in profesores %}
+    <div class="prof-card">
+
+      <div class="prof-card-top">
+        <div class="prof-avatar">
+          {{ p.usuario.perfil.nombre|first|upper }}{{ p.usuario.perfil.apellido|first|upper }}
+        </div>
+        <div>
+          <p class="prof-name">{{ p.usuario.perfil.nombre }} {{ p.usuario.perfil.apellido }}</p>
+          <span class="prof-rol">{{ p.rol }}</span>
+        </div>
+      </div>
+
+      <div class="prof-meta">
+        <div class="prof-meta-item">
+          <i class="bi bi-card-text"></i>
+          <span>DNI: {{ p.usuario.perfil.dni|default:"Sin cargar" }}</span>
+        </div>
+        <div class="prof-meta-item">
+          <i class="bi bi-calendar3"></i>
+          <span>Desde {{ p.fecha_union|date:"d \\d\\e F \\d\\e Y" }}</span>
+        </div>
+      </div>
+
+      <button
+        class="btn-expulsar"
+        onclick="abrirModal('{{ p.id }}', '{{ p.usuario.perfil.nombre }} {{ p.usuario.perfil.apellido }}')">
+        <i class="bi bi-person-dash"></i>
+        Expulsar profesor
+      </button>
+
+    </div>
+    {% endfor %}
+  </div>
+
+{% else %}
+  <div class="empty-state">
+    <i class="bi bi-people"></i>
+    <p>No hay profesores en este gimnasio todavía.</p>
+  </div>
+{% endif %}
+
+<!-- Modal confirm -->
+<div class="modal-overlay" id="modal-expulsar">
+  <div class="modal-box">
+
+    <div class="modal-warn-icon">
+      <i class="bi bi-exclamation-triangle"></i>
+    </div>
+
+    <h3>¿Expulsar profesor?</h3>
+    <p>Estás por expulsar a <strong id="modal-nombre"></strong> del gimnasio. Esta acción no se puede deshacer.</p>
+
+    <div class="modal-actions">
+      <button class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+      <form id="form-expulsar" method="post" action="" style="flex:1;">
+        {% csrf_token %}
+        <button type="submit" class="btn-confirmar" style="width:100%;">Expulsar</button>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function abrirModal(membershipId, nombre) {
+    document.getElementById('modal-nombre').textContent = nombre;
+    document.getElementById('form-expulsar').action = '/logeo/expulsar-profesor/' + membershipId + '/';
+    document.getElementById('modal-expulsar').classList.add('active');
+  }
+
+  function cerrarModal() {
+    document.getElementById('modal-expulsar').classList.remove('active');
+  }
+</script>
 
 {% endblock %}
