@@ -23,7 +23,7 @@ def index(request):
 
 
 @login_required
-@requiere_roles("owner", "admin")
+@requiere_roles("owner", "admin", "profesor")
 def profesores(request):
     gym = request.user.perfil.gym_activo
     membership = Membership.objects.filter(gym=gym,
@@ -55,7 +55,7 @@ def expulsar_profesor(request, membership_id):
 
 
 @login_required
-@requiere_roles("owner", "admin")
+@requiere_roles("owner", "admin", "profesor")
 def miembros(request):
     gym = request.user.perfil.gym_activo
     miembro = Alumnos.objects.filter(gym=gym)
