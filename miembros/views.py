@@ -419,10 +419,10 @@ def eventos(request):
     gym = request.user.perfil.gym_activo
     eventos = []
 
-    horarios = Horario.objects.select_related('clase__profesor__usuario__perfil').prefetch_related(
+    horarios = Horario.objects.select_related('clases__profesor__usuario__perfil').prefetch_related(
         'clase__inscripciones_set'
     ).filter(
-        clase__gym=gym  # ← filtrás por gym
+        clases__gym=gym  # ← filtrás por gym
     )
 
     for h in horarios:
