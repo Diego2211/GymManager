@@ -2,100 +2,428 @@
 
 {% block content %}
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <h2 class="mb-0">Alumnos</h2>
-  <a href="{% url 'ingreso alumnos' %}" class="btn btn-success">
-    <i class="bi bi-person-fill-add me-1"></i> Nuevo alumno
+<style>
+  :root {
+    --blue: #2596be;
+    --blue-light: #5bb8d4;
+    --blue-xlight: #d0eef7;
+    --blue-dark: #1a7a9e;
+    --white: #ffffff;
+    --off-white: #f4fafd;
+    --text-dark: #0d2030;
+    --text-mid: #3a6070;
+    --text-soft: #7eafc0;
+  }
+
+  .alumnos-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.75rem;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .alumnos-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .alumnos-header h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0;
+    letter-spacing: -0.3px;
+  }
+
+  .alumnos-count {
+    background: var(--blue);
+    color: var(--white);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .btn-nuevo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.6rem 1.1rem;
+    background: var(--blue);
+    color: var(--white);
+    border: none;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 14px rgba(37, 150, 190, 0.3);
+    font-family: inherit;
+  }
+
+  .btn-nuevo:hover {
+    background: var(--blue-dark);
+    color: var(--white);
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(37, 150, 190, 0.4);
+  }
+
+  .alumnos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .alumno-card {
+    background: var(--white);
+    border: 1.5px solid var(--blue-xlight);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 12px rgba(37, 150, 190, 0.06);
+    transition: box-shadow 0.2s, transform 0.2s;
+    animation: fadeUp 0.35s ease both;
+  }
+
+  .alumno-card:hover {
+    box-shadow: 0 6px 24px rgba(37, 150, 190, 0.13);
+    transform: translateY(-2px);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .alumno-card-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1rem;
+  }
+
+  .alumno-avatar {
+    width: 48px;
+    height: 48px;
+    background: var(--blue-xlight);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--blue-dark);
+    flex-shrink: 0;
+  }
+
+  .alumno-nombre {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 3px;
+  }
+
+  .alumno-alta {
+    font-size: 0.78rem;
+    color: var(--text-soft);
+    margin: 0;
+  }
+
+  .alumno-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--blue-xlight);
+  }
+
+  .alumno-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-mid);
+  }
+
+  .alumno-meta-item i {
+    color: var(--blue-light);
+    font-size: 0.95rem;
+    width: 16px;
+    text-align: center;
+  }
+
+  .alumno-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-editar-alumno {
+    flex: 1;
+    padding: 0.55rem;
+    background: transparent;
+    color: var(--blue);
+    border: 1.5px solid var(--blue-xlight);
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .btn-editar-alumno:hover {
+    background: var(--blue-xlight);
+    border-color: var(--blue-light);
+    color: var(--blue-dark);
+    text-decoration: none;
+  }
+
+  .btn-eliminar-alumno {
+    flex: 1;
+    padding: 0.55rem;
+    background: transparent;
+    color: #c0392b;
+    border: 1.5px solid #fcc;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .btn-eliminar-alumno:hover {
+    background: #fff0f0;
+    border-color: #e74c3c;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-soft);
+  }
+
+  .empty-state i {
+    font-size: 2.5rem;
+    color: var(--blue-xlight);
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(13, 32, 48, 0.45);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.active {
+    display: flex;
+    animation: fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .modal-box {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 380px;
+    text-align: center;
+    animation: slideUp 0.25s ease;
+    box-shadow: 0 12px 48px rgba(13, 32, 48, 0.18);
+    border: 1px solid var(--blue-xlight);
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(16px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  .modal-warn-icon {
+    width: 52px;
+    height: 52px;
+    background: #fff0f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.4rem;
+    color: #e74c3c;
+  }
+
+  .modal-box h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.4rem;
+  }
+
+  .modal-box p {
+    font-size: 0.85rem;
+    color: var(--text-soft);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+
+  .modal-box p strong {
+    color: var(--text-dark);
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn-cancelar {
+    flex: 1;
+    padding: 0.7rem;
+    background: transparent;
+    color: var(--text-mid);
+    border: 1.5px solid var(--blue-xlight);
+    border-radius: 8px;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .btn-cancelar:hover {
+    border-color: var(--blue-light);
+    color: var(--blue);
+  }
+
+  .btn-confirmar {
+    flex: 1;
+    padding: 0.7rem;
+    background: #e74c3c;
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: inherit;
+  }
+
+  .btn-confirmar:hover { background: #c0392b; }
+</style>
+
+<div class="alumnos-header">
+  <div class="alumnos-header-left">
+    <h2>Alumnos</h2>
+    <span class="alumnos-count">{{ miembros|length }}</span>
+  </div>
+  <a href="{% url 'ingreso alumnos' %}" class="btn-nuevo">
+    <i class="bi bi-person-fill-add"></i> Nuevo alumno
   </a>
 </div>
 
-<div class="row g-3">
-{% for miembro in miembros %}
-  <div class="col-sm-6 col-lg-4">
-    <div class="card border-0 shadow-sm h-100">
-      <div class="card-body">
+{% if miembros %}
+  <div class="alumnos-grid">
+    {% for miembro in miembros %}
+    <div class="alumno-card">
 
-        <div class="d-flex align-items-center gap-3 mb-3">
-          <div style="
-            width:44px; height:44px; border-radius:50%;
-            background:#ede9fe; color:#7847ff;
-            display:flex; align-items:center; justify-content:center;
-            font-weight:600; font-size:16px; flex-shrink:0;
-          ">
-            {{ miembro.nombre|first|upper }}{{ miembro.apellido|first|upper }}
-          </div>
-          <div>
-            <h6 class="mb-0 fw-semibold">{{ miembro.nombre }} {{ miembro.apellido }}</h6>
-            <small class="text-muted">Alta: {{ miembro.fecha_alta|date:"d/m/Y" }}</small>
-          </div>
+      <div class="alumno-card-top">
+        <div class="alumno-avatar">
+          {{ miembro.nombre|first|upper }}{{ miembro.apellido|first|upper }}
         </div>
-
-        <div class="d-flex flex-column gap-1 mb-3" style="font-size:0.875rem;">
-          <span><i class="bi bi-card-text me-2 text-muted"></i>DNI: {{ miembro.dni }}</span>
-          <span><i class="bi bi-phone me-2 text-muted"></i>{{ miembro.celular }}</span>
+        <div>
+          <p class="alumno-nombre">{{ miembro.nombre }} {{ miembro.apellido }}</p>
+          <p class="alumno-alta">Alta: {{ miembro.fecha_alta|date:"d/m/Y" }}</p>
         </div>
-
-        <div class="d-flex gap-2">
-          <a href="{% url 'editar_alumno' miembro.id %}" class="btn btn-sm btn-outline-warning">
-            <i class="bi bi-pencil me-1"></i>Editar
-          </a>
-          <button
-            class="btn btn-sm btn-outline-danger"
-            data-bs-toggle="modal"
-            data-bs-target="#modalEliminar"
-            data-id="{{ miembro.id }}"
-            data-nombre="{{ miembro.nombre }} {{ miembro.apellido }}"
-          >
-            <i class="bi bi-trash me-1"></i>Eliminar
-          </button>
-        </div>
-
       </div>
+
+      <div class="alumno-meta">
+        <div class="alumno-meta-item">
+          <i class="bi bi-card-text"></i>
+          <span>DNI: {{ miembro.dni }}</span>
+        </div>
+        <div class="alumno-meta-item">
+          <i class="bi bi-phone"></i>
+          <span>{{ miembro.celular }}</span>
+        </div>
+      </div>
+
+      <div class="alumno-actions">
+        <a href="{% url 'editar_alumno' miembro.id %}" class="btn-editar-alumno">
+          <i class="bi bi-pencil"></i> Editar
+        </a>
+        <button
+          class="btn-eliminar-alumno"
+          onclick="abrirModal('{{ miembro.id }}', '{{ miembro.nombre }} {{ miembro.apellido }}')">
+          <i class="bi bi-trash"></i> Eliminar
+        </button>
+      </div>
+
     </div>
+    {% endfor %}
   </div>
-{% empty %}
-  <p class="text-muted">No hay alumnos registrados.</p>
-{% endfor %}
-</div>
 
+{% else %}
+  <div class="empty-state">
+    <i class="bi bi-people"></i>
+    <p>No hay alumnos registrados todavía.</p>
+  </div>
+{% endif %}
 
-<!-- Modal confirmación -->
-<div class="modal fade" id="modalEliminar" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+<!-- Modal confirm -->
+<div class="modal-overlay" id="modal-eliminar">
+  <div class="modal-box">
 
-      <div class="modal-header border-0">
-        <h5 class="modal-title">Eliminar alumno</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <div class="modal-body">
-        ¿Estás seguro que querés eliminar a <strong id="nombreAlumnoModal"></strong>?
-        <p class="text-muted mt-1 mb-0" style="font-size:0.875rem;">
-          Esta acción no se puede deshacer.
-        </p>
-      </div>
-
-      <div class="modal-footer border-0">
-        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <form method="POST" id="formEliminar">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-danger">
-            <i class="bi bi-trash me-1"></i>Sí, eliminar
-          </button>
-        </form>
-      </div>
-
+    <div class="modal-warn-icon">
+      <i class="bi bi-exclamation-triangle"></i>
     </div>
+
+    <h3>¿Eliminar alumno?</h3>
+    <p>Estás por eliminar a <strong id="nombre-alumno-modal"></strong>. Esta acción no se puede deshacer.</p>
+
+    <div class="modal-actions">
+      <button class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+      <form id="form-eliminar" method="POST" action="" style="flex:1;">
+        {% csrf_token %}
+        <button type="submit" class="btn-confirmar" style="width:100%;">
+          <i class="bi bi-trash me-1"></i> Sí, eliminar
+        </button>
+      </form>
+    </div>
+
   </div>
 </div>
 
 <script>
-document.getElementById('modalEliminar').addEventListener('show.bs.modal', event => {
-  const btn = event.relatedTarget
-  document.getElementById('nombreAlumnoModal').textContent = btn.getAttribute('data-nombre')
-  document.getElementById('formEliminar').action = "{% url 'eliminar_alumno' 0 %}".replace('/0/', `/${btn.getAttribute('data-id')}/`)
-})
+  function abrirModal(id, nombre) {
+    document.getElementById('nombre-alumno-modal').textContent = nombre;
+    document.getElementById('form-eliminar').action = "{% url 'eliminar_alumno' 0 %}".replace('/0/', '/' + id + '/');
+    document.getElementById('modal-eliminar').classList.add('active');
+  }
+
+  function cerrarModal() {
+    document.getElementById('modal-eliminar').classList.remove('active');
+  }
 </script>
 
 {% endblock %}
