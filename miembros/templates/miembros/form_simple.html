@@ -2,33 +2,168 @@
 
 {% block content %}
 
-<div class="card border-0 shadow-sm" style="max-width:600px;">
-  <div class="card-body p-4">
+<style>
+  :root {
+    --blue: #2596be;
+    --blue-light: #5bb8d4;
+    --blue-xlight: #d0eef7;
+    --blue-dark: #1a7a9e;
+    --white: #ffffff;
+    --off-white: #f4fafd;
+    --text-dark: #0d2030;
+    --text-mid: #3a6070;
+    --text-soft: #7eafc0;
+  }
 
-    <h2 class="mb-4">{{ msg }}</h2>
+  .form-card {
+    background: var(--white);
+    border: 1.5px solid var(--blue-xlight);
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 600px;
+    box-shadow: 0 2px 12px rgba(37,150,190,0.06);
+    animation: fadeUp 0.35s ease both;
+  }
 
-    <form method="POST">
-      {% csrf_token %}
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
-      {% for field in form %}
-      <div class="mb-3">
-        <label class="form-label fw-semibold">{{ field.label }}</label>
-        {{ field }}
-        {% if field.errors %}
-          <div class="text-danger" style="font-size:0.875rem;">{{ field.errors }}</div>
-        {% endif %}
-      </div>
-      {% endfor %}
+  .form-card h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 1.75rem;
+    letter-spacing: -0.3px;
+  }
 
-      <div class="d-flex gap-2 mt-4">
-        <button type="submit" class="btn btn-primary">
-          <i class="bi bi-floppy me-1"></i>Guardar
-        </button>
-        <a href="javascript:history.back()" class="btn btn-outline-secondary">Cancelar</a>
-      </div>
+  .field-group { margin-bottom: 1.25rem; }
 
-    </form>
-  </div>
+  .field-group label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--text-mid);
+    margin-bottom: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .field-group input,
+  .field-group select,
+  .field-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--blue-xlight);
+    border-radius: 10px;
+    background: var(--off-white);
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    font-family: inherit;
+  }
+
+  .field-group input:focus,
+  .field-group select:focus,
+  .field-group textarea:focus {
+    border-color: var(--blue);
+    background: var(--white);
+    box-shadow: 0 0 0 4px rgba(37,150,190,0.1);
+  }
+
+  .field-group input::placeholder,
+  .field-group textarea::placeholder {
+    color: var(--text-soft);
+    font-weight: 300;
+  }
+
+  .field-group textarea { resize: vertical; min-height: 100px; }
+
+  .field-error {
+    font-size: 0.78rem;
+    color: #d94f4f;
+    margin-top: 5px;
+  }
+  .field-error ul { list-style: none; padding: 0; margin: 0; }
+
+  .form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 1.75rem;
+  }
+
+  .btn-guardar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--blue);
+    color: var(--white);
+    font-size: 0.92rem;
+    font-weight: 600;
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.18s, box-shadow 0.2s;
+    box-shadow: 0 4px 14px rgba(37,150,190,0.3);
+    font-family: inherit;
+  }
+  .btn-guardar:hover {
+    background: var(--blue-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(37,150,190,0.4);
+  }
+  .btn-guardar:active { transform: translateY(0); }
+
+  .btn-cancelar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    color: var(--text-mid);
+    font-size: 0.92rem;
+    font-weight: 500;
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: 1.5px solid var(--blue-xlight);
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+    font-family: inherit;
+  }
+  .btn-cancelar:hover {
+    border-color: var(--blue-light);
+    color: var(--blue);
+  }
+</style>
+
+<div class="form-card">
+
+  <h2>{{ msg }}</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+
+    {% for field in form %}
+    <div class="field-group">
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}
+        <div class="field-error">{{ field.errors }}</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+
+    <div class="form-actions">
+      <button type="submit" class="btn-guardar">
+        <i class="bi bi-floppy"></i> Guardar
+      </button>
+      <a href="javascript:history.back()" class="btn-cancelar">Cancelar</a>
+    </div>
+
+  </form>
 </div>
 
 {% endblock %}
