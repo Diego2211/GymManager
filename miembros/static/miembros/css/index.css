@@ -179,3 +179,17 @@ body {
         width: calc(100% - 70px);
     }
 }
+.topbar-brand {
+    margin-right: auto;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    
+}
+.topbar-brand .gym {
+    color: #fff;
+}
+
+.topbar-brand .manager {
+    color: #0d2030;
+}
