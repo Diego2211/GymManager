@@ -69,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'miembros.context_processors.nombre_usuario',
+                'miembros.context_processors.nombre_gym',
                 'accounts.context_processors.nombre_usuario',
                 'django.contrib.messages.context_processors.messages',
             ],
