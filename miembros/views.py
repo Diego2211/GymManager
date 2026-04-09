@@ -63,7 +63,7 @@ def miembros(request):
         "miembros": miembro
     })
 @login_required
-@requiere_roles("owner", "admin")
+@requiere_roles("owner", "admin", "profesor")
 def editar_alumno(request, alumno_id):
     gym = request.user.perfil.gym_activo
     alumno = get_object_or_404(Alumnos, id=alumno_id, gym=gym)
@@ -416,10 +416,13 @@ def eventos(request):
         "viernes": 5,
         "sabado": 6,
     }
+    gym = request.user.perfil.gym_activo
     eventos = []
 
     horarios = Horario.objects.select_related('clase__profesor__usuario__perfil').prefetch_related(
         'clase__inscripciones_set'
+    ).filter(
+        clase__gym=gym  # ← filtrás por gym
     )
 
     for h in horarios:
