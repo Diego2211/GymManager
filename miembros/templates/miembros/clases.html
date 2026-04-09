@@ -2,102 +2,436 @@
 
 {% block content %}
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <h2 class="mb-0">Clases</h2>
-  <a href="{% url 'crear clase' %}" class="btn btn-success">
-    <i class="bi bi-plus-circle me-1"></i> Nueva clase
+<style>
+  :root {
+    --blue: #2596be;
+    --blue-light: #5bb8d4;
+    --blue-xlight: #d0eef7;
+    --blue-dark: #1a7a9e;
+    --white: #ffffff;
+    --off-white: #f4fafd;
+    --text-dark: #0d2030;
+    --text-mid: #3a6070;
+    --text-soft: #7eafc0;
+  }
+
+  .prof-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.75rem;
+    justify-content: space-between;
+  }
+
+  .prof-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .prof-header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0;
+    letter-spacing: -0.3px;
+  }
+
+  .prof-count {
+    background: var(--blue);
+    color: var(--white);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .btn-nueva-clase {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--blue);
+    color: var(--white);
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 8px 18px;
+    border-radius: 999px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.18s, box-shadow 0.2s;
+    box-shadow: 0 4px 14px rgba(37,150,190,0.3);
+    font-family: inherit;
+  }
+  .btn-nueva-clase:hover {
+    background: var(--blue-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(37,150,190,0.4);
+    color: var(--white);
+  }
+
+  .prof-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .prof-card {
+    background: var(--white);
+    border: 1.5px solid var(--blue-xlight);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 12px rgba(37,150,190,0.06);
+    transition: box-shadow 0.2s, transform 0.2s;
+    animation: fadeUp 0.35s ease both;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .prof-card:hover {
+    box-shadow: 0 6px 24px rgba(37,150,190,0.13);
+    transform: translateY(-2px);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .prof-card-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1rem;
+  }
+
+  .prof-avatar {
+    width: 48px;
+    height: 48px;
+    background: var(--blue-xlight);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: var(--blue-dark);
+    flex-shrink: 0;
+  }
+
+  .clase-nombre {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 3px;
+  }
+
+  .prof-rol {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: var(--blue-xlight);
+    color: var(--blue-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .prof-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 1.25rem;
+    flex: 1;
+  }
+
+  .prof-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-mid);
+  }
+
+  .prof-meta-item i {
+    color: var(--blue-light);
+    font-size: 0.95rem;
+    width: 16px;
+    text-align: center;
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .btn-ver {
+    flex: 1;
+    padding: 0.65rem;
+    background: var(--blue);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: inherit;
+    transition: background 0.2s;
+  }
+  .btn-ver:hover { background: var(--blue-dark); color: var(--white); }
+
+  .btn-editar {
+    padding: 0.65rem 0.9rem;
+    background: transparent;
+    color: var(--text-mid);
+    border: 1.5px solid var(--blue-xlight);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .btn-editar:hover {
+    border-color: var(--blue-light);
+    color: var(--blue);
+  }
+
+  .btn-eliminar {
+    padding: 0.65rem 0.9rem;
+    background: transparent;
+    color: #c0392b;
+    border: 1.5px solid #fcc;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .btn-eliminar:hover {
+    background: #fff0f0;
+    border-color: #e74c3c;
+  }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(13,32,48,0.45);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.active {
+    display: flex;
+    animation: fadeIn 0.2s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .modal-box {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 380px;
+    text-align: center;
+    animation: slideUp 0.25s ease;
+    box-shadow: 0 12px 48px rgba(13,32,48,0.18);
+    border: 1px solid var(--blue-xlight);
+  }
+  @keyframes slideUp {
+    from { transform: translateY(16px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+
+  .modal-warn-icon {
+    width: 52px; height: 52px;
+    background: #fff0f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.4rem;
+    color: #e74c3c;
+  }
+
+  .modal-box h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.4rem;
+  }
+
+  .modal-box p {
+    font-size: 0.85rem;
+    color: var(--text-soft);
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-box p strong { color: var(--text-dark); }
+
+  .modal-actions { display: flex; gap: 10px; }
+
+  .btn-cancelar {
+    flex: 1;
+    padding: 0.7rem;
+    background: transparent;
+    color: var(--text-mid);
+    border: 1.5px solid var(--blue-xlight);
+    border-radius: 8px;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .btn-cancelar:hover { border-color: var(--blue-light); color: var(--blue); }
+
+  .btn-confirmar {
+    flex: 1;
+    padding: 0.7rem;
+    background: #e74c3c;
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: inherit;
+  }
+  .btn-confirmar:hover { background: #c0392b; }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-soft);
+  }
+  .empty-state i {
+    font-size: 2.5rem;
+    color: var(--blue-xlight);
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+</style>
+
+<div class="prof-header">
+  <div class="prof-header-left">
+    <h1>Clases</h1>
+    <span class="prof-count">{{ clases|length }}</span>
+  </div>
+  <a href="{% url 'crear clase' %}" class="btn-nueva-clase">
+    <i class="bi bi-plus-circle"></i> Nueva clase
   </a>
 </div>
 
-<div class="row g-3">
-{% for clas in clases %}
-  <div class="col-sm-6 col-lg-4">
-    <div class="card h-100 border-0 shadow-sm">
-      <div class="card-body">
+{% if clases %}
+  <div class="prof-grid">
+    {% for clas in clases %}
+    <div class="prof-card">
 
-        <h5 class="card-title fw-semibold">{{ clas.clase }}</h5>
-
-        <p class="card-text text-muted mb-1">
-          <i class="bi bi-person me-1"></i>
-          {{ clas.profesor.usuario.perfil.nombre }} {{ clas.profesor.usuario.perfil.apellido }}
-        </p>
-        <p class="card-text text-muted mb-3">
-          <i class="bi bi-currency-dollar me-1"></i>Cuota: <strong>${{ clas.cuota_mensual }}</strong>
-        </p>
-
-        <div class="d-flex gap-2 flex-wrap">
-          <a href="{% url 'clase' clas.slug %}" class="btn btn-sm btn-primary">
-            <i class="bi bi-eye me-1"></i>Ver clase
-          </a>
-
-          {% if request.membership.rol == "owner" or request.membership.rol == "admin" %}
-          <a href="{% url 'editar_clase' clas.slug %}" class="btn btn-sm btn-outline-warning">
-            <i class="bi bi-pencil me-1"></i>Editar
-          </a>
-          <button
-            class="btn btn-sm btn-outline-danger"
-            data-bs-toggle="modal"
-            data-bs-target="#modalEliminar"
-            data-slug="{{ clas.slug }}"
-            data-nombre="{{ clas.clase }}"
-          >
-            <i class="bi bi-trash me-1"></i>Eliminar
-          </button>
-          {% endif %}
+      <div class="prof-card-top">
+        <div class="prof-avatar">
+          <i class="bi bi-journal-text"></i>
         </div>
-
+        <div>
+          <p class="clase-nombre">{{ clas.clase }}</p>
+          <span class="prof-rol">Clase</span>
+        </div>
       </div>
-    </div>
-  </div>
-{% empty %}
-  <p class="text-muted">No hay clases creadas.</p>
-{% endfor %}
-</div>
 
+      <div class="prof-meta">
+        <div class="prof-meta-item">
+          <i class="bi bi-person"></i>
+          <span>{{ clas.profesor.usuario.perfil.nombre }} {{ clas.profesor.usuario.perfil.apellido }}</span>
+        </div>
+        <div class="prof-meta-item">
+          <i class="bi bi-currency-dollar"></i>
+          <span>Cuota: <strong>${{ clas.cuota_mensual }}</strong></span>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <a href="{% url 'clase' clas.slug %}" class="btn-ver">
+          <i class="bi bi-eye"></i> Ver clase
+        </a>
+
+        {% if request.membership.rol == "owner" or request.membership.rol == "admin" %}
+        <a href="{% url 'editar_clase' clas.slug %}" class="btn-editar">
+          <i class="bi bi-pencil"></i>
+        </a>
+        <button
+          class="btn-eliminar"
+          onclick="abrirModal('{{ clas.slug }}', '{{ clas.clase }}')"
+        >
+          <i class="bi bi-trash"></i>
+        </button>
+        {% endif %}
+      </div>
+
+    </div>
+    {% endfor %}
+  </div>
+
+{% else %}
+  <div class="empty-state">
+    <i class="bi bi-journal-x"></i>
+    <p>No hay clases creadas todavía.</p>
+  </div>
+{% endif %}
 
 <!-- Modal confirmación eliminar -->
-<div class="modal fade" id="modalEliminar" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+<div class="modal-overlay" id="modal-eliminar">
+  <div class="modal-box">
 
-      <div class="modal-header border-0">
-        <h5 class="modal-title">Eliminar clase</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <div class="modal-body">
-        ¿Estás seguro que querés eliminar <strong id="nombreClaseModal"></strong>?
-        <p class="text-muted mt-1 mb-0" style="font-size:0.875rem;">
-          Esta acción no se puede deshacer.
-        </p>
-      </div>
-
-      <div class="modal-footer border-0">
-        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-          Cancelar
-        </button>
-        <form method="POST" id="formEliminar">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-danger">
-            <i class="bi bi-trash me-1"></i>Sí, eliminar
-          </button>
-        </form>
-      </div>
-
+    <div class="modal-warn-icon">
+      <i class="bi bi-exclamation-triangle"></i>
     </div>
+
+    <h3>¿Eliminar clase?</h3>
+    <p>Estás por eliminar <strong id="modal-nombre"></strong>. Esta acción no se puede deshacer.</p>
+
+    <div class="modal-actions">
+      <button class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+      <form id="form-eliminar" method="POST" action="" style="flex:1;">
+        {% csrf_token %}
+        <button type="submit" class="btn-confirmar" style="width:100%;">
+          Sí, eliminar
+        </button>
+      </form>
+    </div>
+
   </div>
 </div>
 
 <script>
-const modalEliminar = document.getElementById('modalEliminar')
-modalEliminar.addEventListener('show.bs.modal', event => {
-  const btn = event.relatedTarget
-  const slug = btn.getAttribute('data-slug')
-  const nombre = btn.getAttribute('data-nombre')
+  function abrirModal(slug, nombre) {
+    document.getElementById('modal-nombre').textContent = nombre;
+    document.getElementById('form-eliminar').action = "{% url 'eliminar_clase' '__slug__' %}".replace('__slug__', slug);
+    document.getElementById('modal-eliminar').classList.add('active');
+  }
 
-  document.getElementById('nombreClaseModal').textContent = nombre
-  document.getElementById('formEliminar').action = "{% url 'eliminar_clase' '__slug__' %}".replace('__slug__', slug)
-})
+  function cerrarModal() {
+    document.getElementById('modal-eliminar').classList.remove('active');
+  }
 </script>
 
 {% endblock %}
