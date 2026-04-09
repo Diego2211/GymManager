@@ -38,7 +38,7 @@ class OnboardingMiddleware:
 
             # 🔴 2. Membership obligatorio
             if not Membership.objects.filter(usuario=user, activo=True).exists():
-                return redirect("crear gimnasio")
+                return redirect("unirse_crear")
 
             # 🔴 3. Gym activo obligatorio
             if not perfil.gym_activo:

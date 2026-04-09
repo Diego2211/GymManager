@@ -1,39 +1,94 @@
 {% extends "accounts/base.html" %}
 
+{% block title %}Seleccionar Gimnasio{% endblock %}
+
 {% block content %}
 
-<h1 class="text-center">Gyms a los que perteneces</h1>
+<style>
+  .gym-heading {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 32px;
+    text-align: center;
+    letter-spacing: -0.3px;
+  }
+  .gym-heading span {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: rgba(255,255,255,0.6);
+    margin-top: 6px;
+  }
+  .gym-card {
+    background: #fff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 420px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  }
+  .gym-card-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    border-bottom: 1px solid #f0f4f6;
+    transition: background 0.15s;
+  }
+  .gym-card-item:last-child { border-bottom: none; }
+  .gym-card-item:hover { background: #f7fbfd; }
+  .gym-item-left { display: flex; align-items: center; gap: 14px; }
+  .gym-avatar {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: #d0eef7;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: #1a7a9e;
+    flex-shrink: 0;
+    text-transform: uppercase;
+  }
+  .gym-name { font-size: 0.95rem; font-weight: 600; color: #0d2030; }
+  .gym-sub  { font-size: 0.78rem; color: #7eafc0; margin-top: 2px; }
+  .gym-btn {
+    background: #2596be; color: #fff;
+    border: none; border-radius: 8px;
+    padding: 8px 18px;
+    font-size: 0.82rem; font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    white-space: nowrap;
+  }
+  .gym-btn:hover  { background: #1a7a9e; }
+  .gym-btn:active { transform: scale(0.97); }
+</style>
 
-{% for m in memberships %}
-<div class="container mt-5">
+<div style="display:flex; flex-direction:column; align-items:center; width:100%;">
 
-<div class="row justify-content-center">
+  <h1 class="gym-heading">
+    Gimnasios e instituciones a los que perteneces
+    <span>SeleccionÃ¡ uno para continuar</span>
+  </h1>
 
-<div class="col-md-6">
+  <div class="gym-card">
+    {% for m in memberships %}
+    <div class="gym-card-item">
+      <div class="gym-item-left">
+        <div class="gym-avatar">{{ m.gym.nombre|slice:":2" }}</div>
+        <div>
+          <div class="gym-name">{{ m.gym.nombre }}</div>
+          <div class="gym-sub">Miembro activo</div>
+        </div>
+      </div>
+      <form method="POST" style="margin:0;">
+        {% csrf_token %}
+        <input type="hidden" name="gym_id" value="{{ m.gym.id }}">
+        <button type="submit" class="gym-btn">Ingresar</button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
 
-<div class="card shadow">
-
-<div class="card-header">
-<h4 class="text-center">{{m.gym.nombre}}</h4>
 </div>
 
-<div class="card-body text-center">
-<form method="POST">
-    {% csrf_token %}
-    <input type="hidden" name="gym_id" value="{{ m.gym.id }}">
-        
-    <button type="submit" class="btn btn-primary">Elegir</button>
-
-</form>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-{% endfor %}
 {% endblock %}
