@@ -2,43 +2,243 @@
 
 {% block content %}
 
-<div class="container mt-5">
+<style>
+  :root {
+    --blue: #2596be;
+    --blue-light: #5bb8d4;
+    --blue-xlight: #d0eef7;
+    --blue-dark: #1a7a9e;
+    --white: #ffffff;
+    --off-white: #f4fafd;
+    --text-dark: #0d2030;
+    --text-mid: #3a6070;
+    --text-soft: #7eafc0;
+  }
 
-<div class="row justify-content-center">
+  .perfil-wrap {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-<div class="col-md-6">
+  .perfil-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 2rem 2.25rem;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 4px 24px rgba(37, 150, 190, 0.12);
+    border: 1px solid var(--blue-xlight);
+    animation: fadeUp 0.4s ease both;
+  }
 
-<div class="card shadow">
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
-<div class="card-header">
-<h4 class="text-center">Mi perfil</h4>
-</div>
+  .perfil-card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--blue-xlight);
+  }
 
-<div class="card-body">
+  .perfil-avatar {
+    width: 56px;
+    height: 56px;
+    background: var(--blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.5px;
+  }
 
-<p><strong>Email:</strong> {{ request.user.email }}</p>
+  .perfil-card-header h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0 0 3px;
+  }
 
-<p><strong>Nombre:</strong> {{ perfil.nombre }}</p>
+  .perfil-card-header p {
+    font-size: 0.82rem;
+    color: var(--text-soft);
+    margin: 0;
+  }
 
-<p><strong>Apellido:</strong> {{ perfil.apellido }}</p>
+  .perfil-fields {
+    display: flex;
+    flex-direction: column;
+  }
 
-<p><strong>Teléfono:</strong> {{ perfil.celular }}</p>
+  .perfil-field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--blue-xlight);
+  }
 
-<p><strong>Dni:</strong> {{ perfil.dni }}</p>
+  .perfil-field:last-child {
+    border-bottom: none;
+  }
 
-<p><strong>Usuario desde:</strong> {{ perfil.fecha_registro|date:"d \\d\\e F \\d\\e Y" }}</p>
+  .perfil-field-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-mid);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
 
-<a class="btn btn-primary" href="{% url 'editar perfil' %}">Editar perfil</a>
+  .perfil-field-label i {
+    font-size: 1rem;
+    color: var(--blue-light);
+    width: 18px;
+    text-align: center;
+  }
 
-</form>
-</div>
+  .perfil-field-value {
+    font-size: 0.92rem;
+    color: var(--text-dark);
+    text-align: right;
+    max-width: 60%;
+    word-break: break-word;
+  }
 
-</div>
+  .perfil-field-value.empty {
+    color: var(--text-soft);
+    font-style: italic;
+  }
 
-</div>
+  .badge-fecha {
+    background: var(--blue-xlight);
+    color: var(--blue-dark);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
 
-</div>
+  .btn-editar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 0.85rem;
+    background: var(--blue);
+    color: var(--white);
+    border: none;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 1.5rem;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.18s, box-shadow 0.22s;
+    box-shadow: 0 4px 20px rgba(37, 150, 190, 0.35);
+    font-family: inherit;
+  }
 
+  .btn-editar:hover {
+    background: var(--blue-dark);
+    color: var(--white);
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(37, 150, 190, 0.45);
+  }
+
+  .btn-editar:active { transform: translateY(0); }
+</style>
+
+<div class="perfil-wrap">
+  <div class="perfil-card">
+
+    <div class="perfil-card-header">
+      <div class="perfil-avatar">
+        {{ perfil.nombre|first|upper }}{{ perfil.apellido|first|upper }}
+      </div>
+      <div>
+        <h2>{{ perfil.nombre }} {{ perfil.apellido }}</h2>
+        <p>{{ request.user.email }}</p>
+      </div>
+    </div>
+
+    <div class="perfil-fields">
+
+      <div class="perfil-field">
+        <span class="perfil-field-label">
+          <i class="bi bi-envelope"></i> Email
+        </span>
+        <span class="perfil-field-value">{{ request.user.email }}</span>
+      </div>
+
+      <div class="perfil-field">
+        <span class="perfil-field-label">
+          <i class="bi bi-person"></i> Nombre
+        </span>
+        <span class="perfil-field-value {% if not perfil.nombre %}empty{% endif %}">
+          {{ perfil.nombre|default:"Sin completar" }}
+        </span>
+      </div>
+
+      <div class="perfil-field">
+        <span class="perfil-field-label">
+          <i class="bi bi-person"></i> Apellido
+        </span>
+        <span class="perfil-field-value {% if not perfil.apellido %}empty{% endif %}">
+          {{ perfil.apellido|default:"Sin completar" }}
+        </span>
+      </div>
+
+      <div class="perfil-field">
+        <span class="perfil-field-label">
+          <i class="bi bi-telephone"></i> Teléfono
+        </span>
+        <span class="perfil-field-value {% if not perfil.celular %}empty{% endif %}">
+          {{ perfil.celular|default:"Sin completar" }}
+        </span>
+      </div>
+
+      <div class="perfil-field">
+        <span class="perfil-field-label">
+          <i class="bi bi-card-text"></i> DNI
+        </span>
+        <span class="perfil-field-value {% if not perfil.dni %}empty{% endif %}">
+          {{ perfil.dni|default:"Sin completar" }}
+        </span>
+      </div>
+
+      <div class="perfil-field">
+        <span class="perfil-field-label">
+          <i class="bi bi-calendar3"></i> Miembro desde
+        </span>
+        <span class="badge-fecha">
+          {{ perfil.fecha_registro|date:"d \\d\\e F \\d\\e Y" }}
+        </span>
+      </div>
+
+    </div>
+
+    <a href="{% url 'editar perfil' %}" class="btn-editar">
+      <i class="bi bi-pencil"></i>
+      Editar perfil
+    </a>
+
+  </div>
 </div>
 
 {% endblock %}

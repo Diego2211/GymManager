@@ -12,6 +12,6 @@ urlpatterns = [
     path("ver-invitaciones/", ver_invitaciones, name="ver invitaciones"),
     path("elegir-gym/", seleccionar_gym, name="elegir gym"),
     path("aceptar-invitacion/", aceptar_invitacion, name="aceptar invitacion"),
-    path("unirse/", elegir, name="unirse_crear")
+    path("unirse/", elegir, name="unirse_crear"),
 
 ]
